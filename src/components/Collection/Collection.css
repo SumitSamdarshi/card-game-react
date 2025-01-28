@@ -1,0 +1,116 @@
+.collection-container {
+  padding: 1rem;
+  background: #EA9828;
+  min-height: 100vh;
+}
+
+.collection-heading-container {
+  display: flex;
+  justify-content: center;
+  background: #EA9828;
+  font-size: 20px;
+  padding: 10px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.collection-bar-container {
+  display: flex;
+  justify-content: space-between;
+  background: #EA9828;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  border: 1px solid black;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.collection-bar-section {
+  flex: 1;
+  text-align: center;
+  padding: 15px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  user-select: none;
+}
+
+.collection-bar-section.active {
+  background-color: black;
+  color: #EA6828;
+}
+
+.collection-bar-section:hover {
+  background-color: black;
+  color: #EA6828;
+}
+
+.collection-cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  /* Adjust number of columns */
+  gap: 20px;
+  /* Space between cards */
+  padding: 10px;
+  /* Optional padding around the grid */
+}
+
+.collection-card {
+  background-color: black;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  padding: 15px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.collection-card-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.collection-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.collection-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.collection-modal-card {
+  background: black;
+  border-radius: 10px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  width: 60%;
+  max-width: 500px;
+  padding: 20px;
+  box-sizing: border-box;
+  text-align: center;
+  z-index: 1001;
+}
+
+.collection-modal-card-content {
+  font-size: 16px;
+  color: #333333;
+}
+
+.collection-back-icon {
+  position: fixed;
+  cursor: pointer;
+  font-size: 50px;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+}

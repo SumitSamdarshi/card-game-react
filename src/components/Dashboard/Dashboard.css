@@ -1,0 +1,203 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  background-color: #EA9828;
+  padding: 20px;
+  position: relative;
+}
+
+.dashboard-sub-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: black;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 100px;
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+}
+
+.dashboard-sub-container-text {
+  color: #EA9828;
+  font-size: 20px;
+  font-weight: bold;
+  position: absolute;
+  margin-top: 5px;
+  z-index: 10;
+  top: 37%;
+}
+
+.dashboard-top-right-buttons {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.dashboard-logout-button {
+  background-color: black;
+  color: #EA9828;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dashboard-logout-button:hover {
+  background-color: grey;
+  transform: scale(1.05);
+}
+
+.dashboard-center-buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  height: 100%;
+}
+
+.dashboard-action-button {
+  background-color: #ea6828;
+  color: black;
+  border: none;
+  padding: 20px 40px;
+  border-radius: 8px;
+  font-size: 20px;
+  cursor: pointer;
+  width: 300px;
+  text-align: center;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  position: relative;
+}
+
+.dashboard-action-button:hover {
+  background-color: #d35c1b;
+}
+
+.dropdown-container {
+  position: relative;
+  width: 300px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  margin-top: 5px;
+  background-color: #EA9828;
+  border: 1px solid #EA6828;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  list-style: none;
+  padding: 5px 0;
+  z-index: 10;
+}
+
+.dropdown-item {
+  padding: 10px;
+  cursor: pointer;
+  text-align: center;
+  background-color: #EA9828;
+}
+
+.dropdown-item:hover {
+  background-color: #ea6828;
+}
+
+
+.dashboard-action-button:hover {
+  background-color: #ea9828;
+  transform: scale(1.05);
+}
+
+.dashboard-back-icon {
+  position: fixed;
+  cursor: pointer;
+  font-size: 50px;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+}
+
+.dashboard-back-icon:hover {
+  transform: scale(1.2);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.dashoard-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+}
+
+.dashoard-modal-content {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  width: 80%;
+  max-width: 1000px;
+}
+
+.dashoard-cards-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.dashoard-card-wrapper {
+  padding: 10px;
+  background-color: black;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.dashoard-card {
+  width: 150px;
+  object-fit: fill;
+  overflow: hidden;
+  border-radius: 8px;
+  background-color: #f0f0f0;
+}
+
+.dashoard-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dashoard-modal-button {
+  margin-top: 50px;
+  padding: 10px 20px;
+  background-color: #ea6828;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.dashoard-modal-button:hover {
+  background-color: #ea6828;
+  transform: scale(1.1);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
