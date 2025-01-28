@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './Game.css'; // Include a CSS file for styling
 import baseImage from "../../images/000.png";
 import { getCurrentUser, updateUser } from '../../auth/auth';
-import { apiService } from '../../service/user-service';
+import { BASE_URL, apiService } from '../../service/user-service';
 import { toast } from 'react-toastify';
 import { GiChest } from 'react-icons/gi';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -28,7 +28,6 @@ const Game = () => {
     const [computerCardImage, setComputerCardImage] = useState(baseImage);
     const [roundWinner, SetRoundWinner] = useState(null);
     const [roundOver, setRoundOver] = useState(false);
-    const [isGameCreated, setIsGameCreated] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [playerLostCard, setPlayerLostCard] = useState(null);
 
@@ -79,7 +78,7 @@ const Game = () => {
                 setPlayerScore(data?.game?.playerScore);
                 setWinner(data?.game?.winner);
                 setComputerStat(data?.stat);
-                setComputerCardImage(`https://card-game-production.up.railway.app/card-game/api/cards/image/card/${data?.computerCard?.cardImage}`)
+                setComputerCardImage(`${BASE_URL}/card-game/api/cards/image/card/${data?.computerCard?.cardImage}`)
                 SetRoundWinner(data?.roundWinner);
                 setRoundOver(true);
                 if (data?.game?.winner === 'Computer') {
@@ -94,47 +93,45 @@ const Game = () => {
 
     };
 
-    const createGame = () => {
-        if (isGameCreated) {
-            return;
-        }
-        setIsLoading(true);
-
-        const compCards = [];
-        const size = gameType === '7v7' ? 7 : (gameType === '11v11' ? 11 : 15);
-        for (let i = 0; i < size; i++) {
-            compCards.push(baseImage);
-        }
-        setComputerCards(compCards);
-
-        const currentUser = getCurrentUser();
-        const gameReq = {
-            'game_type': gameType,
-            'playerId': currentUser.user_id
-        }
-        apiService.post('/card-game/api/games/createGame', gameReq)
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                if (data?.success === false) {
-                    toast.error(data.message);
-                    navigate("/player/dashboard");
-                    return;
-                }
-                setGameData(data);
-                setPlayerCards(data.playerCards);
-                setIsGameCreated(true);
-            })
-            .catch((error) => {
-                console.error('Error during registration:', error);
-            });
-            setIsLoading(false);
-    }
+    
 
     useEffect(() => {
+        const createGame = () => {
+            setIsLoading(true);
+    
+            const compCards = [];
+            const size = gameType === '7v7' ? 7 : (gameType === '11v11' ? 11 : 15);
+            for (let i = 0; i < size; i++) {
+                compCards.push(baseImage);
+            }
+            setComputerCards(compCards);
+    
+            const currentUser = getCurrentUser();
+            const gameReq = {
+                'game_type': gameType,
+                'playerId': currentUser.user_id
+            }
+            apiService.post('/card-game/api/games/createGame', gameReq)
+                .then((response) => {
+                    return response.json();
+                })
+                .then((data) => {
+                    if (data?.success === false) {
+                        toast.error(data.message);
+                        navigate("/player/dashboard");
+                        return;
+                    }
+                    setGameData(data);
+                    setPlayerCards(data.playerCards);
+                })
+                .catch((error) => {
+                    console.error('Error during registration:', error);
+                });
+                setIsLoading(false);
+        }
+
         createGame();
-    }, []);
+    }, [gameType,navigate]);
 
     const handleExit = () => {
         setIsLoading(true);
@@ -186,7 +183,7 @@ const Game = () => {
             .catch((error) => {
                 console.error('Error during registration:', error);
             });
-            setIsLoading(false);
+        setIsLoading(false);
     }
 
     return (
@@ -221,7 +218,7 @@ const Game = () => {
                             <div className={`game-player-card-wrapper ${selectedCard?.cardId === card.cardId ? 'selected' : ''}`}>
                                 <img
                                     key={card.cardId}
-                                    src={'https://card-game-production.up.railway.app/card-game/api/cards/image/card/' + card.cardImage}
+                                    src={`${BASE_URL}/card-game/api/cards/image/card/${card.cardImage}`}
                                     alt={`${card.cardName} card`}
                                     className="game-card"
                                     onClick={() => handleCardClick(card)}
@@ -262,7 +259,7 @@ const Game = () => {
                             <div className="game-cards-display">
                                 <div className="game-card-wrapper">
                                     <div className='game-center-card-container'>
-                                        <img src={'https://card-game-production.up.railway.app/card-game/api/cards/image/card/' + selectedCard.cardImage} alt="Player's Card" className={`game-center-card ${roundOver && roundWinner !== 'Player' ? 'lost' : ''}`} />
+                                        <img src={`${BASE_URL}/card-game/api/cards/image/card/${selectedCard.cardImage}`} alt="Player's Card" className={`game-center-card ${roundOver && roundWinner !== 'Player' ? 'lost' : ''}`} />
                                     </div>
                                     <div className='game-center-card-text'>Player's Card</div>
                                 </div>
@@ -301,7 +298,7 @@ const Game = () => {
                             <div className="game-winner-card-display">
                                 <div className="game-winner-card-wrapper">
                                     {winner === 'Computer' && playerLostCard && (<div className='game-winner-card-computer'>
-                                        <img src={'https://card-game-production.up.railway.app/card-game/api/cards/image/card/' + playerLostCard.cardImage} alt="Player's Card" className="game-winner-card" />
+                                        <img src={`${BASE_URL}/card-game/api/cards/image/card/${playerLostCard.cardImage}`} alt="Player's Card" className="game-winner-card" />
                                         <div className='game-center-card-text'>You lost this card</div>
                                     </div>)}
                                     {winner === 'Player' && (<div className='game-winner-card-player'>

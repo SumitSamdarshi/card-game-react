@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Collection.css";
-import { apiService } from "../../service/user-service";
+import { BASE_URL, apiService } from "../../service/user-service";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
@@ -68,7 +68,7 @@ const Collection = () => {
             <div className="collection-cards-container" style={blurBg}>
                 {cards.map((card) => (
                     <div key={card.id} className="collection-card" onClick={() => handleCardClick(card)}>
-                        <img src={'https://card-game-production.up.railway.app/card-game/api/cards/image/card/' + card.cardImage} alt={card.name} className="collection-card-image" />
+                        <img src={`${BASE_URL}/card-game/api/cards/image/card/${card.cardImage}`} alt={card.name} className="collection-card-image" />
                     </div>
                 ))}
             </div>
@@ -76,7 +76,7 @@ const Collection = () => {
                 <div className="collection-modal-overlay" onClick={closeModal}>
                     <div className="collection-modal-card" onClick={(e) => e.stopPropagation()}>
                         <div className="collection-modal-card-content">
-                            <img src={'https://card-game-production.up.railway.app/card-game/api/cards/image/card/' + activeCard.cardImage} alt={activeCard.name} className="collection-card-image" />
+                            <img src={`${BASE_URL}/card-game/api/cards/image/card/${activeCard.cardImage}`} alt={activeCard.name} className="collection-card-image" />
                         </div>
                     </div>
                 </div>

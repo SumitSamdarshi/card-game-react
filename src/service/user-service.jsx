@@ -1,6 +1,7 @@
 import { getToken } from "../auth/auth";
 
-const BASE_URL = 'https://card-game-production.up.railway.app';
+ export const BASE_URL = 'https://card-game-production.up.railway.app';
+//export const BASE_URL = 'http://localhost:9090';
 
 export const apiService = {
 

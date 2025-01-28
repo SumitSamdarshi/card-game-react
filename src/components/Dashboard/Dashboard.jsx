@@ -4,14 +4,13 @@ import { doLogOut, getCurrentUser, updateUser } from "../../auth/auth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { IoMdArrowRoundBack } from "react-icons/io";
-import { apiService } from "../../service/user-service";
+import { BASE_URL, apiService } from "../../service/user-service";
 import { ClipLoader } from "react-spinners";
 
 const Dashboard = () => {
     const navigate = useNavigate();
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [cardData, setCardData] = useState([]);
-    const [isCardsAssigned, setIsCardsAssigned] = useState(false);
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const gameTypes = ['7v7', '11v11', '15v15'];
@@ -41,32 +40,28 @@ const Dashboard = () => {
         setIsModalVisible(false);
     };
 
-    const assignCards = (user) => {
-        if (isCardsAssigned) {
-            return;
-        }
-        setIsLoading(true);
-        apiService.get(`/card-game/api/users/assign/${user.user_id}`)
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                if (data?.success === false) {
-                    toast.error(data.message);
-                    return;
-                }
-                setCardData(data.cards);
-                updateUser(data.user);
-                setIsModalVisible(true);
-                setIsCardsAssigned(true);
-            })
-            .catch((error) => {
-                console.error('Error during registration:', error);
-            });
-            setIsLoading(false);
-    }
 
     useEffect(() => {
+        const assignCards = (user) => {
+            setIsLoading(true);
+            apiService.get(`/card-game/api/users/assign/${user.user_id}`)
+                .then((response) => {
+                    return response.json();
+                })
+                .then((data) => {
+                    if (data?.success === false) {
+                        toast.error(data.message);
+                        return;
+                    }
+                    setCardData(data.cards);
+                    updateUser(data.user);
+                    setIsModalVisible(true);
+                })
+                .catch((error) => {
+                    console.error('Error during registration:', error);
+                });
+                setIsLoading(false);
+        }
         const user = getCurrentUser();
         const noOfCards = user?.noOfCards;
         if (noOfCards === 0) {
@@ -83,7 +78,7 @@ const Dashboard = () => {
                         <div className="dashoard-cards-container">
                             {cardData.map((card) => (
                                 <div key={card.cardId} className="dashoard-card-wrapper">
-                                    <img className="dashoard-card" src={'https://card-game-production.up.railway.app/card-game/api/cards/image/card/' + card.cardImage} alt={`dashboard-card ${card.Id}`} />
+                                    <img className="dashoard-card" src={`${BASE_URL}/card-game/api/cards/image/card/${card.cardImage}`} alt={`dashboard-card ${card.Id}`} />
                                 </div>
                             ))}
                         </div>

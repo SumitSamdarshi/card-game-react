@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Inventory.css";
-import { apiService } from "../../service/user-service";
+import { BASE_URL, apiService } from "../../service/user-service";
 import { getCurrentUser, getToken, updateUser } from "../../auth/auth";
 import { useNavigate } from "react-router-dom";
 import { IoMdArrowRoundBack } from "react-icons/io";
@@ -8,8 +8,6 @@ import { GiChest, GiUpgrade } from "react-icons/gi";
 import { toast } from "react-toastify";
 import { TiEdit } from "react-icons/ti";
 import { ClipLoader } from "react-spinners";
-
-const BASE_URL = 'https://card-game-production.up.railway.app';
 
 const Inventory = () => {
   const navigate = useNavigate();
@@ -300,7 +298,7 @@ const Inventory = () => {
         <div className="inventory-cards-container" style={blurBg}>
           {cards.map((card, index) => (
             <div key={card.id} className={`inventory-card ${selectedCards.includes((card.cardId + '-' + index)) ? "selected" : ""}`} onClick={() => handleCardClick(card, index)}>
-              <img src={'https://card-game-production.up.railway.app/card-game/api/cards/image/card/' + card.cardImage} alt={card.name} className="inventory-card-image" />
+              <img src={`${BASE_URL}/card-game/api/cards/image/card/${card.cardImage}`} alt={card.name} className="inventory-card-image" />
             </div>
           ))}
         </div>
@@ -311,7 +309,7 @@ const Inventory = () => {
           {newCard && (<div className="inventory-modal-overlay-text">You got this card !!</div>)}
           <div className="inventory-modal-card" onClick={(e) => e.stopPropagation()}>
             <div className="inventory-modal-card-content">
-              <img src={'https://card-game-production.up.railway.app/card-game/api/cards/image/card/' + activeCard.cardImage} alt={activeCard.name} className="inventory-card-image" />
+              <img src={`${BASE_URL}/card-game/api/cards/image/card/${activeCard.cardImage}`} alt={activeCard.name} className="inventory-card-image" />
             </div>
           </div>
         </div>
