@@ -331,7 +331,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  top: 75%;
+  top: 70%;
   transform: translateY(-50%);
 }
 
@@ -389,7 +389,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  top: 75%;
+  top: 65%;
   transform: translateY(-50%)
 }
 
@@ -426,6 +426,19 @@
 
 .inventory-draw-chances{
   text-align: left;
+}
+
+@media(max-width: 1350px){
+  .inventory-chest-container{
+    position: relative;
+    right: 0;
+    transform : translateY(25%);
+  }
+  .inventory-combine-container{
+    position: relative;
+    left: 0;
+    transform : translateY(-25%);
+  }
 }
 
 @media (max-width: 800px){
