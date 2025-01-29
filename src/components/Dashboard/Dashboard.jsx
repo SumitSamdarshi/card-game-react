@@ -27,7 +27,12 @@ const Dashboard = () => {
 
     const handleLogoutClick = () => {
         doLogOut(() => {
-            toast.success("LogOut Successful !")
+            toast.success("LogOut Successful !",{
+                style: {
+                  backgroundColor: "black",  
+                  color: "#ea9828",
+                }
+              })
             navigate("/login")
         })
     };
@@ -50,15 +55,25 @@ const Dashboard = () => {
                 })
                 .then((data) => {
                     if (data?.success === false) {
-                        toast.error(data.message);
+                        toast.error(data.message,{
+                            style: {
+                              backgroundColor: "black",  
+                              color: "#ea9828",
+                            }
+                          });
                         return;
                     }
                     setCardData(data.cards);
                     updateUser(data.user);
                     setIsModalVisible(true);
                 })
-                .catch((error) => {
-                    console.error('Error during registration:', error);
+                .catch(() => {
+                    toast.error("Something went wrong !!", {
+                        style: {
+                            backgroundColor: "black",
+                            color: "#ea9828",
+                        }
+                    });
                 });
                 setIsLoading(false);
         }

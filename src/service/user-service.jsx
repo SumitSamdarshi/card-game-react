@@ -1,7 +1,7 @@
 import { getToken } from "../auth/auth";
 
- export const BASE_URL = 'https://card-game-production.up.railway.app';
-//export const BASE_URL = 'http://localhost:9090';
+  export const BASE_URL = 'https://card-game-production.up.railway.app';
+// export const BASE_URL = 'http://localhost:9090';
 
 export const apiService = {
 
@@ -19,7 +19,6 @@ export const apiService = {
         return response;
       })
       .catch((error) => {
-        console.error('API POST Error:', error);
         throw error;
       });
   },
@@ -37,7 +36,6 @@ export const apiService = {
         return response;
       })
       .catch((error) => {
-        console.error('API GET Error:', error);
         throw error;
       });
   }

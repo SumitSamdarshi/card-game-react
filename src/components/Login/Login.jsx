@@ -42,21 +42,36 @@ const Login = () => {
       })
       .then((data) => {
         if (data?.success === false) {
-          toast.error(data.message);
+          toast.error(data.message,{
+            style: {
+              backgroundColor: "black",  
+              color: "#ea9828",
+            }
+          });
         }
         if (data == null || data.token == null || data.user == null) {
           return;
         }
         doLogin(data, () => {
         })
-        toast.success("Login Successful !")
+        toast.success("Login Successful !",{
+          style: {
+            backgroundColor: "black",
+            color: "#ea9828",
+          }
+        })
         setIsLoading(false);
         navigate("/player/dashboard")
       })
-      .catch((error) => {
-        console.error('Error during registration:', error);
+      .catch(() => {
+        toast.error("Something went wrong !!", {
+          style: {
+              backgroundColor: "black",
+              color: "#ea9828",
+          }
       });
-
+      });
+      setIsLoading(false);
   };
 
   const handleBackClick = () => {

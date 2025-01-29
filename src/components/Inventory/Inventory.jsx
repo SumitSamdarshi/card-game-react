@@ -89,18 +89,29 @@ const Inventory = () => {
       })
       .then((data) => {
         if (data?.success === false) {
-          toast.error(data.message);
+          toast.error(data.message, {
+            style: {
+              backgroundColor: "black",
+              color: "#ea9828",
+            }
+          });
           return;
         }
         setActiveCard(data.card)
         setNewCard(true);
         updateUser(data.user);
+        setActiveSection('All');
       })
-      .catch((error) => {
-        console.error('Error during registration:', error);
+      .catch(() => {
+        setActiveSection('All');
+        toast.error("Something went wrong !!", {
+          style: {
+              backgroundColor: "black",
+              color: "#ea9828",
+          }
+      });
       });
 
-    setActiveSection('All');
     setIsSelecting(false);
     setCategories([...categories, 'Legendary']);
     setSelectedCards([]);
@@ -115,7 +126,12 @@ const Inventory = () => {
       })
       .then((data) => {
         if (data?.success === false) {
-          toast.error(data.message);
+          toast.error(data.message, {
+            style: {
+              backgroundColor: "black",
+              color: "#ea9828",
+            }
+          });
           return;
         }
         setActiveCard(data.card);
@@ -124,10 +140,15 @@ const Inventory = () => {
         setActiveSection('All');
         setToggle(!toggle);
       })
-      .catch((error) => {
-        console.error('Error during registration:', error);
+      .catch(() => {
+        toast.error("Something went wrong !!", {
+          style: {
+              backgroundColor: "black",
+              color: "#ea9828",
+          }
       });
-      setIsLoading(false);
+      });
+    setIsLoading(false);
   }
 
   const fetchCards = (section) => {
@@ -142,16 +163,26 @@ const Inventory = () => {
       })
       .then((data) => {
         if (data?.success === false) {
-          toast.error(data.message);
+          toast.error(data.message, {
+            style: {
+              backgroundColor: "black",
+              color: "#ea9828",
+            }
+          });
           return;
         }
         setCards(data);
         setSelectedCards([]);
       })
-      .catch((error) => {
-        console.error('Error while fetching card:', error);
+      .catch(() => {
+        toast.error("Something went wrong !!", {
+          style: {
+              backgroundColor: "black",
+              color: "#ea9828",
+          }
       });
-      setIsLoading(false);
+      });
+    setIsLoading(false);
   };
 
   const handleBackClick = () => {
@@ -184,10 +215,20 @@ const Inventory = () => {
             updateUser(newImageUrl);
             setToggle(!toggle);
           } else {
-            console.error("Image upload failed");
+            toast.error("Something went wrong !!", {
+              style: {
+                  backgroundColor: "black",
+                  color: "#ea9828",
+              }
+          });
           }
         } catch (error) {
-          console.error("Error uploading image:", error);
+          toast.error("Something went wrong !!", {
+            style: {
+                backgroundColor: "black",
+                color: "#ea9828",
+            }
+        });
         }
       }
     };
@@ -260,7 +301,17 @@ const Inventory = () => {
             <GiChest className="inventory-chest-icon" onClick={handleDraw} />
             <div className="inventory-chest-label">Chest</div>
             <div className="inventory-chest-number">{userData.chest}</div>
-            <div className="inventory-info-div">Draw your card !!</div>
+            <div className="inventory-info-div">
+              <h3>Draw your card !!</h3>
+              <div className="inventory-draw-chances">
+                <li>Common : 85%</li>
+                <li>Rare : 10%</li>
+                <li>Epic : 3%</li>
+                <li>Mythic : 1.5%</li>
+                <li>Legendary : 0.5%</li>
+
+              </div>
+            </div>
           </div>
 
           <div className="inventory-combine-container">

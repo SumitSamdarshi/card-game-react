@@ -33,18 +33,34 @@ const SignUp = () => {
       })
       .then((data) => {
         if (data?.success === false) {
-          toast.error(data.message);
+          toast.error(data.message,{
+            style: {
+              backgroundColor: "black",  
+              color: "#ea9828",
+            }
+          });
         }
         if (data == null || data.user_id == null) {
           return;
         }
-        toast.success("Registration Successful !");
+        toast.success("Registration Successful!", {
+          style: {
+            backgroundColor: "black",
+            color: "#ea9828",
+          }
+        });
         setIsLoading(false);
         navigate("/login")
       })
-      .catch((error) => {
-        console.error('Error during registration:', error);
+      .catch(() => {
+        toast.error("Something went wrong !!", {
+          style: {
+              backgroundColor: "black",
+              color: "#ea9828",
+          }
       });
+      });
+      setIsLoading(false);
   };
 
   const handleBackClick = () => {

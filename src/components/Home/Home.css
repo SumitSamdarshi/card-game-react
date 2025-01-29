@@ -66,8 +66,9 @@
   background: #EA9828;
   border-radius: 10px;
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-  width: 60%;
-  max-width: 500px;
+  max-width: 90%;
+  min-width: 70%;
+  min-height: 50%;
   padding: 20px;
   box-sizing: border-box;
   text-align: center;
@@ -76,5 +77,32 @@
 
 .home-modal-card-content {
   font-size: 16px;
-  color: #333333;
+  color: black;
+}
+
+.rules-heading {
+  color: black;
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+/* Style for the subheading of each individual rule */
+.rule-subheading {
+  color: black;
+  margin-top: 4rem;
+  margin-bottom: 0;
+  font-size: 20px;
+}
+
+/* Style for the list of items under each rule */
+.rule-list {
+  margin-left: 20px;
+  list-style-type: square;
+  padding-left: 10px;
+}
+
+/* Style for each list item */
+.rule-list li {
+  margin-bottom: 10px;
+  color: black
 }

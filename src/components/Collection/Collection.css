@@ -61,7 +61,7 @@
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
   text-align: center;
-  padding: 15px;
+  padding: 10px;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 

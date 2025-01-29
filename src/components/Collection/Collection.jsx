@@ -4,6 +4,7 @@ import { BASE_URL, apiService } from "../../service/user-service";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
+import { toast } from "react-toastify";
 
 const Collection = () => {
     const navigate = useNavigate();
@@ -31,15 +32,30 @@ const Collection = () => {
         apiService
             .get(getCardUrl)
             .then((response) => {
-                return response.json(); // Directly parse as JSON
+                return response.json();
             })
             .then((data) => {
+                if (data?.success === false) {
+                    toast.error(data.message, {
+                        style: {
+                            backgroundColor: "black",
+                            color: "#ea9828",
+                        }
+                    });
+                    return;
+                }
                 setCards(data)
             })
-            .catch((error) => {
-                console.error('Error during registration:', error);
+            .catch(() => {
+                toast.error("Something went wrong !!", {
+                    style: {
+                        backgroundColor: "black",
+                        color: "#ea9828",
+                    }
+                });
+                return;
             });
-            setIsLoading(false);
+        setIsLoading(false);
     };
 
     const handleBackClick = () => {

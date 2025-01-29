@@ -65,7 +65,12 @@ const Game = () => {
             })
             .then((data) => {
                 if (data?.success === false) {
-                    toast.error(data.message);
+                    toast.error(data.message,{
+                        style: {
+                          backgroundColor: "black",  
+                          color: "#ea9828",
+                        }
+                      });
                     return;
                 }
                 const compCards = computerCards;
@@ -86,8 +91,13 @@ const Game = () => {
                 }
 
             })
-            .catch((error) => {
-                console.error('Error during registration:', error);
+            .catch(() => {
+                toast.error("Something went wrong !!", {
+                    style: {
+                        backgroundColor: "black",
+                        color: "#ea9828",
+                    }
+                });
             });
 
 
@@ -117,15 +127,25 @@ const Game = () => {
                 })
                 .then((data) => {
                     if (data?.success === false) {
-                        toast.error(data.message);
+                        toast.error(data.message,{
+                            style: {
+                              backgroundColor: "black",  
+                              color: "#ea9828",
+                            }
+                          });
                         navigate("/player/dashboard");
                         return;
                     }
                     setGameData(data);
                     setPlayerCards(data.playerCards);
                 })
-                .catch((error) => {
-                    console.error('Error during registration:', error);
+                .catch(() => {
+                    toast.error("Something went wrong !!", {
+                        style: {
+                            backgroundColor: "black",
+                            color: "#ea9828",
+                        }
+                    });
                 });
                 setIsLoading(false);
         }
@@ -141,13 +161,23 @@ const Game = () => {
             })
             .then((data) => {
                 if (data?.success === false) {
-                    toast.error(data.message);
+                    toast.error(data.message,{
+                        style: {
+                          backgroundColor: "black",  
+                          color: "#ea9828",
+                        }
+                      });
                     return;
                 }
                 updateUser(data);
             })
-            .catch((error) => {
-                console.error('Error during registration:', error);
+            .catch(() => {
+                toast.error("Something went wrong !!", {
+                    style: {
+                        backgroundColor: "black",
+                        color: "#ea9828",
+                    }
+                });
             });
         navigate("/player/dashboard");
         setIsLoading(false);
@@ -173,15 +203,25 @@ const Game = () => {
             })
             .then((data) => {
                 if (data?.success === false) {
-                    toast.error(data.message);
+                    toast.error(data.message,{
+                        style: {
+                          backgroundColor: "black",  
+                          color: "#ea9828",
+                        }
+                      });
                     return;
                 }
                 setGameData(data?.game);
                 setWinner(data?.game?.winner);
                 setPlayerLostCard(data?.playerLostCard);
             })
-            .catch((error) => {
-                console.error('Error during registration:', error);
+            .catch(() => {
+                toast.error("Something went wrong !!", {
+                    style: {
+                        backgroundColor: "black",
+                        color: "#ea9828",
+                    }
+                });
             });
         setIsLoading(false);
     }
