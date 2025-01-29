@@ -108,6 +108,9 @@
 .game-turn {
   font-size: 25px;
   font-weight: bold;
+  background-color: orangered;
+  border-radius: 15px;
+  padding: 5px;
 }
 
 .game-turn-text {
@@ -405,12 +408,7 @@
   }
 
   .game-center-card-container{
-    max-width: 70%;
     padding: 10px;
-  }
-
-  .game-cards-display{
-    flex-direction: column;
   }
 
   .game-modal-content{
@@ -434,12 +432,8 @@
     font-size: 20px;
   }
 
-  .game-turn{
-    padding-bottom: 20px;
-  }
-  
-  .game-turn-text{
-    padding-top: 20px;
+  .game-scores{
+    padding: 30px;
   }
 
   .game-player-score{

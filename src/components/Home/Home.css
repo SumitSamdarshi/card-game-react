@@ -80,23 +80,19 @@
 .home-modal-card-content {
   font-size: 16px;
   color: black;
-  /* overflow-wrap: break-word; */
 }
 
 .rules-heading {
   color: black;
   font-size: 40px;
   margin-bottom: 10px;
-  /* word-wrap: break-word; */
 }
-
 
 .rule-subheading {
   color: black;
   margin-top: 4rem;
   margin-bottom: 0;
   font-size: 20px;
-  /* word-wrap: break-word;  */
 }
 
 .rule-list {
@@ -108,5 +104,4 @@
 .rule-list li {
   margin-bottom: 10px;
   color: black;
-  /* word-wrap: break-word; */
 }

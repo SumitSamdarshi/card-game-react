@@ -331,7 +331,7 @@ const Inventory = () => {
         <div className="inventory-note-card">
           <span className="inventory-note-text">{selectedCards.length}/{noOfCardsCombine} : Cards Selected</span>
         </div>
-        <button className="inventory-rounded-button" onClick={handleCombine} disabled={selectedCards.length < noOfCardsCombine}>Comine</button>
+        <button className="inventory-rounded-button" onClick={handleCombine} disabled={selectedCards.length < noOfCardsCombine}>Combine</button>
         <button className="inventory-rounded-button cancel" onClick={toggleSelectionMode}>Cancel</button>
       </div>
       )}
