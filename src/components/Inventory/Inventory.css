@@ -427,3 +427,27 @@
 .inventory-draw-chances{
   text-align: left;
 }
+
+@media (max-width: 800px){
+    .inventory-bar-section{
+      font-size: 0.8rem;
+    }
+
+    .inventory-cards-container{
+      grid-template-columns:repeat(auto-fill, minmax(25%, 1fr))
+    }
+
+    .inventory-chest-container{
+      position: relative;
+      right: 0;
+      transform : translateY(25%);
+    }
+    .inventory-combine-container{
+      position: relative;
+      left: 0;
+      transform : translateY(-25%);
+    }
+    .inventory-profile-container{
+      padding: 0;
+    }
+} 

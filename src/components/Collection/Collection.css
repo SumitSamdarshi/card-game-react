@@ -114,3 +114,13 @@
   left: 20px;
   z-index: 1000;
 }
+
+@media (max-width: 800px){
+  .collection-bar-section{
+    font-size: 0.8rem;
+  }
+
+  .collection-cards-container{
+    grid-template-columns:repeat(auto-fill, minmax(25%, 1fr))
+  }
+} 

@@ -106,17 +106,13 @@
 }
 
 .game-turn {
-  position: absolute;
-  font-size: 30px;
+  font-size: 25px;
   font-weight: bold;
-  top: 48%;
 }
 
 .game-turn-text {
-  position: absolute;
-  font-size: 20px;
+  font-size: 25px;
   font-weight: bold;
-  top: 52%;
 }
 
 .game-stats {
@@ -380,3 +376,77 @@
   visibility: visible;
   opacity: 1;
 }
+
+@media (max-width: 800px){
+  .game-player-cards{
+    gap: 20px;
+  }
+
+  .game-player-card-wrapper {
+    max-width:20%;
+    padding:5px;
+  }
+
+  .game-computer-cards{
+    gap: 20px;
+  }
+  
+  .game-computer-card-wrapper{
+    max-width:20%;
+    padding: 5px;
+  }
+
+  .game-card {
+    max-width: 100%;
+  }
+
+  .game-center-card{
+    width: 100%;
+  }
+
+  .game-center-card-container{
+    max-width: 70%;
+    padding: 10px;
+  }
+
+  .game-cards-display{
+    flex-direction: column;
+  }
+
+  .game-modal-content{
+    max-width: 80%;
+    height: 90%;
+  }
+
+  .game-card-wrapper{
+    max-width: 55%;
+  }
+
+  .game-winner-content{
+    font-size: 20px;
+  }
+
+  .game-center-card-text{
+    font-size: 16px;
+  }
+
+  .game-stat-text{
+    font-size: 20px;
+  }
+
+  .game-turn{
+    padding-bottom: 20px;
+  }
+  
+  .game-turn-text{
+    padding-top: 20px;
+  }
+
+  .game-player-score{
+    padding: 10px;
+  }
+
+  .game-computer-score{
+    padding: 10px;
+  }
+} 

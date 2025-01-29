@@ -246,12 +246,11 @@ const Game = () => {
                             </div>
                         ))}
                     </div>
-
+                    <div className='game-turn'>{playerTurn ? "Player's" : "Computer's"} turn</div>
                     <div className="game-scores">
                         <div className="game-player-score">Player Score: {playerScore}</div>
                         <div className="game-computer-score">Computer Score: {computerScore}</div>
                     </div>
-                    <div className='game-turn'>{playerTurn ? "Player's" : "Computer's"} turn</div>
                     <div className='game-turn-text'>{showStats ? (playerTurn ? "Select a stat !!" : "Select a card !!") : "Select a card !!"} </div>
 
                     <div className="game-player-cards">
