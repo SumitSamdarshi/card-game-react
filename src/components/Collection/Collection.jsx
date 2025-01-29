@@ -32,6 +32,9 @@ const Collection = () => {
         apiService
             .get(getCardUrl)
             .then((response) => {
+                setTimeout(() => {
+                    setIsLoading(false);
+                }, 3000);
                 return response.json();
             })
             .then((data) => {
@@ -55,7 +58,6 @@ const Collection = () => {
                 });
                 return;
             });
-        setIsLoading(false);
     };
 
     const handleBackClick = () => {

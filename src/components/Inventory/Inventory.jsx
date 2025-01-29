@@ -159,6 +159,10 @@ const Inventory = () => {
     apiService
       .get(getCardUrl)
       .then((response) => {
+        setTimeout(() => {
+          setIsLoading(false);
+
+      }, 3000);
         return response.json();
       })
       .then((data) => {
@@ -182,7 +186,6 @@ const Inventory = () => {
           }
       });
       });
-    setIsLoading(false);
   };
 
   const handleBackClick = () => {

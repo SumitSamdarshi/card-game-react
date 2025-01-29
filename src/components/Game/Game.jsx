@@ -59,8 +59,7 @@ const Game = () => {
             .then((response) => {
                 setTimeout(() => {
                     setIsLoading(false);
-
-                }, 200);
+                }, 3000);
                 return response.json();
             })
             .then((data) => {
@@ -107,8 +106,7 @@ const Game = () => {
 
     useEffect(() => {
         const createGame = () => {
-            setIsLoading(true);
-    
+            setIsLoading(true);    
             const compCards = [];
             const size = gameType === '7v7' ? 7 : (gameType === '11v11' ? 11 : 15);
             for (let i = 0; i < size; i++) {
@@ -123,6 +121,10 @@ const Game = () => {
             }
             apiService.post('/card-game/api/games/createGame', gameReq)
                 .then((response) => {
+                    setTimeout(() => {
+                        setIsLoading(false);
+    
+                    }, 3000);
                     return response.json();
                 })
                 .then((data) => {
@@ -133,6 +135,7 @@ const Game = () => {
                               color: "#ea9828",
                             }
                           });
+                          setIsLoading(false);
                         navigate("/player/dashboard");
                         return;
                     }
@@ -147,7 +150,6 @@ const Game = () => {
                         }
                     });
                 });
-                setIsLoading(false);
         }
 
         createGame();
@@ -316,9 +318,9 @@ const Game = () => {
                             {roundOver && (
                                 <div className='game-stat-text'>
                                     {playerTurn ? (
-                                        <p>Player chose : {statSelected}</p>
+                                        <p>Player picked : {statSelected}</p>
                                     ) : (
-                                        <p>Computer chose : {computerStat}</p>
+                                        <p>Computer picked : {computerStat}</p>
                                     )}
                                 </div>
                             )}
