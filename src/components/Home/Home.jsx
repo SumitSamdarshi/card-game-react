@@ -57,7 +57,7 @@ const Home = () => {
                             
                             <h4 className="rule-subheading">Game</h4>
                             <ul className="rule-list">
-                                <li>Three game types are available, with options for 7, 11, or 15 cards.</li>
+                                <li>For game types are available, with options for 7, 11, 15 or custom no of cards.</li>
                                 <li>The number of cards drawn will depend on the chosen game type.</li>
                                 <li>Player cards will be drawn based on the unique cards in the player’s deck.</li>
                                 <li>Computer cards will be drawn according to the rarity of the player’s cards.</li>
@@ -68,6 +68,7 @@ const Home = () => {
                                 <li>The winner of each round will be determined by comparing the values of the selected stats.</li>
                                 <li>The player with the higher overall score at the end of all rounds will be declared the winner of the game.</li>
                                 <li>If the player wins the game, a chest will be awarded.</li>
+                                <li>Rewards 7v7 : 1-chest, 11v11 : 2-chest, 15v15 : 3-chest and custom : 1-chest.</li>
                                 <li>If the player loses, one card from the player’s deck will be forfeited.</li>
                             </ul>
                             

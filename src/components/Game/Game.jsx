@@ -61,7 +61,7 @@ const Game = () => {
             .then((response) => {
                 setTimeout(() => {
                     setIsLoading(false);
-                }, 30);
+                }, 10);
                 return response.json();
             })
             .then((data) => {
@@ -120,7 +120,7 @@ const Game = () => {
                     setTimeout(() => {
                         setIsLoading(false);
 
-                    }, 100);
+                    }, 15);
                     return response.json();
                 })
                 .then((data) => {
@@ -145,6 +145,14 @@ const Game = () => {
                     setPlayerCards(data.playerCards);
                     setComputerScore(data?.computerScore);
                     setPlayerScore(data?.playerScore);
+                    if (data?.computerScore !== 0 || data?.playerScore !== 0) {
+                        toast.success("Existing game loaded !", {
+                            style: {
+                                backgroundColor: "black",
+                                color: "#ea9828",
+                            }
+                        })
+                    }
                 })
                 .catch(() => {
                     toast.error("Something went wrong !!", {

@@ -164,7 +164,7 @@ const Inventory = () => {
         setTimeout(() => {
           setIsLoading(false);
 
-        }, 30);
+        }, 5);
         return response.json();
       })
       .then((data) => {
@@ -311,11 +311,11 @@ const Inventory = () => {
             <div className="inventory-info-div">
               <h3>Draw your card !!</h3>
               <div className="inventory-draw-chances">
-                <li>Common : 85%</li>
-                <li>Rare : 10%</li>
-                <li>Epic : 3%</li>
-                <li>Mythic : 1.5%</li>
-                <li>Legendary : 0.5%</li>
+                <li>Common : 80%</li>
+                <li>Rare : 12%</li>
+                <li>Epic : 5%</li>
+                <li>Mythic : 2.2%</li>
+                <li>Legendary : 0.8%</li>
 
               </div>
             </div>
