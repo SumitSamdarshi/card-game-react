@@ -7,6 +7,8 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import { BASE_URL, apiService } from "../../service/user-service";
 import { ClipLoader } from "react-spinners";
 
+const images = require.context('../../images', false, /\.(png|jpe?g|gif)$/);
+
 const Dashboard = () => {
     const navigate = useNavigate();
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -14,11 +16,18 @@ const Dashboard = () => {
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const gameTypes = ['7v7', '11v11', '15v15'];
+    const [customSelect, setCustomSelect] = useState(false);
+    const [allDistinctCards, setAllDistinctCards] = useState([]);
+    const [selectedCards, setSelectedCards] = useState([]);
 
 
     const handleOptionSelect = (type) => {
         setDropdownOpen(false);
-        navigate("/player/game", { state: type })
+        navigate("/player/game", {
+            state: {
+                'type': type,
+            }
+        })
     };
 
     const handleInventoryClick = () => {
@@ -27,12 +36,12 @@ const Dashboard = () => {
 
     const handleLogoutClick = () => {
         doLogOut(() => {
-            toast.success("LogOut Successful !",{
+            toast.success("LogOut Successful !", {
                 style: {
-                  backgroundColor: "black",  
-                  color: "#ea9828",
+                    backgroundColor: "black",
+                    color: "#ea9828",
                 }
-              })
+            })
             navigate("/login")
         })
     };
@@ -45,6 +54,57 @@ const Dashboard = () => {
         setIsModalVisible(false);
     };
 
+    const handleCustomSelect = () => {
+        const user = getCurrentUser();
+        setIsLoading(true);
+        apiService.get(`/card-game/api/cards/distinct/user/${user.user_id}`)
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                console.log("distinct cards : ", data);
+                if (data?.success === false) {
+                    toast.error(data.message, {
+                        style: {
+                            backgroundColor: "black",
+                            color: "#ea9828",
+                        }
+                    });
+                    return;
+                }
+                setCustomSelect(true);
+                setAllDistinctCards(data);
+            })
+            .catch(() => {
+                toast.error("Something went wrong !!", {
+                    style: {
+                        backgroundColor: "black",
+                        color: "#ea9828",
+                    }
+                });
+            });
+        setIsLoading(false);
+    }
+
+    const handleCardClick = (card) => {
+        console.log("selected card : ", selectedCards);
+        if (selectedCards.some((c) => c.cardId === card.cardId)) {
+            setSelectedCards(selectedCards.filter((c) => c.cardId !== card.cardId));
+        } else {
+            setSelectedCards([...selectedCards, card]);
+        }
+    }
+
+    const handleCustomPlay = () => {
+        console.log("custom play button clicked");
+        navigate("/player/game", {
+            state: {
+                'type': 'custom',
+                'data': selectedCards
+            }
+        })
+    }
+
 
     useEffect(() => {
         const assignCards = (user) => {
@@ -55,12 +115,12 @@ const Dashboard = () => {
                 })
                 .then((data) => {
                     if (data?.success === false) {
-                        toast.error(data.message,{
+                        toast.error(data.message, {
                             style: {
-                              backgroundColor: "black",  
-                              color: "#ea9828",
+                                backgroundColor: "black",
+                                color: "#ea9828",
                             }
-                          });
+                        });
                         return;
                     }
                     setCardData(data.cards);
@@ -75,7 +135,7 @@ const Dashboard = () => {
                         }
                     });
                 });
-                setIsLoading(false);
+            setIsLoading(false);
         }
         const user = getCurrentUser();
         const noOfCards = user?.noOfCards;
@@ -91,15 +151,51 @@ const Dashboard = () => {
                     <div className="dashoard-modal-content">
                         <p>You got these cards as starter:</p>
                         <div className="dashoard-cards-container">
-                            {cardData.map((card) => (
-                                <div key={card.cardId} className="dashoard-card-wrapper">
-                                    <img className="dashoard-card" src={`${BASE_URL}/card-game/api/cards/image/card/${card.cardImage}`} alt={`dashboard-card ${card.Id}`} />
-                                </div>
-                            ))}
+                            {cardData.map((card) => {
+                                const imageSrc = images(`./${card.cardId.toString().padStart(3, '0')}.png`);
+
+                                return (
+                                    <div key={card.cardId} className="dashoard-card-wrapper">
+                                        <img src={imageSrc} alt={card.name} className="dashoard-card" />
+                                    </div>
+                                );
+                            })}
                         </div>
                         <button className="dashoard-modal-button" onClick={closeModal}>Close</button>
                     </div>
                 </div>
+            )}
+
+            {customSelect && (<div className="dashoard-modal-overlay">
+                <div className="dashoard-modal-content">
+                    <p>Select cards you want to play with (min:5) </p>
+                    <div className="dashboard-note-container">
+                        <div className="dashboard-note-card">
+                            <span className="dahboard-note-text">Cards Selected : {selectedCards.length}</span>
+                        </div>
+                        <button className="dashboard-rounded-button" onClick={handleCustomPlay} disabled={selectedCards.length < 5}>Play</button>
+                    </div>
+                    <div className="dashoard-custom-cards-container">
+                        {/* {allDistinctCards.map((card) => (
+                            <div key={card.cardId} className={`dashoard-custom-card-wrapper ${selectedCards.some((c) => c.cardId === card.cardId) ? "selected" : ""}`}>
+                                <img className="dashoard-card" src={`${BASE_URL}/card-game/api/cards/image/card/${card.cardImage}`} alt={`dashboard-card ${card.Id}`}
+                                    onClick={() => handleCardClick(card)} />
+                            </div>
+                        ))} */}
+
+                        {allDistinctCards.map((card) => {
+                            const imageSrc = images(`./${card.cardId.toString().padStart(3, '0')}.png`);
+
+                            return (
+                                <div key={card.cardId} className={`dashoard-custom-card-wrapper ${selectedCards.some((c) => c.cardId === card.cardId) ? "selected" : ""}`} onClick={() => handleCardClick(card)}>
+                                    <img src={imageSrc} alt={card.name} className="dashoard-card" />
+                                </div>
+                            );
+                        })}
+                    </div>
+                    <button className="dashoard-modal-button" onClick={closeModal}>Close</button>
+                </div>
+            </div>
             )}
 
             <IoMdArrowRoundBack onClick={handleBackClick} className="dashboard-back-icon" />
@@ -135,6 +231,13 @@ const Dashboard = () => {
                                         {type}
                                     </li>
                                 ))}
+                                <li
+                                    key={"Custom"}
+                                    className="dropdown-item"
+                                    onClick={handleCustomSelect}
+                                >
+                                    Custom
+                                </li>
                             </ul>
                         )}
                     </div>

@@ -9,6 +9,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { ClipLoader } from 'react-spinners';
 import { FaPowerOff } from 'react-icons/fa';
 
+const images = require.context('../../images', false, /\.(png|jpe?g|gif)$/);
+
 const Game = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -59,17 +61,17 @@ const Game = () => {
             .then((response) => {
                 setTimeout(() => {
                     setIsLoading(false);
-                }, 3000);
+                }, 300);
                 return response.json();
             })
             .then((data) => {
                 if (data?.success === false) {
-                    toast.error(data.message,{
+                    toast.error(data.message, {
                         style: {
-                          backgroundColor: "black",  
-                          color: "#ea9828",
+                            backgroundColor: "black",
+                            color: "#ea9828",
                         }
-                      });
+                    });
                     return;
                 }
                 const compCards = computerCards;
@@ -82,7 +84,8 @@ const Game = () => {
                 setPlayerScore(data?.game?.playerScore);
                 setWinner(data?.game?.winner);
                 setComputerStat(data?.stat);
-                setComputerCardImage(`${BASE_URL}/card-game/api/cards/image/card/${data?.computerCard?.cardImage}`)
+                const compImageSrc = images(`./${data.computerCard.cardId.toString().padStart(3, '0')}.png`);
+                setComputerCardImage(compImageSrc)
                 SetRoundWinner(data?.roundWinner);
                 setRoundOver(true);
                 if (data?.game?.winner === 'Computer') {
@@ -102,45 +105,46 @@ const Game = () => {
 
     };
 
-    
-
     useEffect(() => {
         const createGame = () => {
-            setIsLoading(true);    
-            const compCards = [];
-            const size = gameType === '7v7' ? 7 : (gameType === '11v11' ? 11 : 15);
-            for (let i = 0; i < size; i++) {
-                compCards.push(baseImage);
-            }
-            setComputerCards(compCards);
-    
+            setIsLoading(true);
+
             const currentUser = getCurrentUser();
             const gameReq = {
-                'game_type': gameType,
-                'playerId': currentUser.user_id
+                'game_type': gameType.type,
+                'playerId': currentUser.user_id,
+                'playerCards': gameType.data
             }
             apiService.post('/card-game/api/games/createGame', gameReq)
                 .then((response) => {
                     setTimeout(() => {
                         setIsLoading(false);
-    
-                    }, 3000);
+
+                    }, 300);
                     return response.json();
                 })
                 .then((data) => {
                     if (data?.success === false) {
-                        toast.error(data.message,{
+                        toast.error(data.message, {
                             style: {
-                              backgroundColor: "black",  
-                              color: "#ea9828",
+                                backgroundColor: "black",
+                                color: "#ea9828",
                             }
-                          });
-                          setIsLoading(false);
+                        });
+                        setIsLoading(false);
                         navigate("/player/dashboard");
                         return;
                     }
+                    const compCards = [];
+                    const size = data.playerCards.length;
+                    for (let i = 0; i < size; i++) {
+                        compCards.push(baseImage);
+                    }
+                    setComputerCards(compCards);
                     setGameData(data);
                     setPlayerCards(data.playerCards);
+                    setComputerScore(data?.computerScore);
+                    setPlayerScore(data?.playerScore);
                 })
                 .catch(() => {
                     toast.error("Something went wrong !!", {
@@ -153,7 +157,7 @@ const Game = () => {
         }
 
         createGame();
-    }, [gameType,navigate]);
+    }, [gameType, navigate]);
 
     const handleExit = () => {
         setIsLoading(true);
@@ -163,12 +167,12 @@ const Game = () => {
             })
             .then((data) => {
                 if (data?.success === false) {
-                    toast.error(data.message,{
+                    toast.error(data.message, {
                         style: {
-                          backgroundColor: "black",  
-                          color: "#ea9828",
+                            backgroundColor: "black",
+                            color: "#ea9828",
                         }
-                      });
+                    });
                     return;
                 }
                 updateUser(data);
@@ -205,12 +209,12 @@ const Game = () => {
             })
             .then((data) => {
                 if (data?.success === false) {
-                    toast.error(data.message,{
+                    toast.error(data.message, {
                         style: {
-                          backgroundColor: "black",  
-                          color: "#ea9828",
+                            backgroundColor: "black",
+                            color: "#ea9828",
                         }
-                      });
+                    });
                     return;
                 }
                 setGameData(data?.game);
@@ -227,6 +231,8 @@ const Game = () => {
             });
         setIsLoading(false);
     }
+
+    const selectedCardImageSrc = selectedCard ? images(`./${selectedCard.cardId.toString().padStart(3, '0')}.png`) : null;
 
     return (
         <>
@@ -255,7 +261,7 @@ const Game = () => {
 
                     <div className="game-player-cards">
 
-                        {playerCards.map((card) => (
+                        {/* {playerCards.map((card) => (
                             <div className={`game-player-card-wrapper ${selectedCard?.cardId === card.cardId ? 'selected' : ''}`}>
                                 <img
                                     key={card.cardId}
@@ -265,7 +271,17 @@ const Game = () => {
                                     onClick={() => handleCardClick(card)}
                                 />
                             </div>
-                        ))}
+                        ))} */}
+
+                        {playerCards.map((card) => {
+                            const imageSrc = images(`./${card.cardId.toString().padStart(3, '0')}.png`);
+
+                            return (
+                                <div key={card.cardId} className={`game-player-card-wrapper ${selectedCard?.cardId === card.cardId ? 'selected' : ''}`} onClick={() => handleCardClick(card)}>
+                                    <img src={imageSrc} alt={card.name} className="game-card" />
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
                 <div className='game-stat-container'>
@@ -300,7 +316,7 @@ const Game = () => {
                             <div className="game-cards-display">
                                 <div className="game-card-wrapper">
                                     <div className='game-center-card-container'>
-                                        <img src={`${BASE_URL}/card-game/api/cards/image/card/${selectedCard.cardImage}`} alt="Player's Card" className={`game-center-card ${roundOver && roundWinner !== 'Player' ? 'lost' : ''}`} />
+                                        <img src={selectedCardImageSrc} alt="Player's Card" className={`game-center-card ${roundOver && roundWinner !== 'Player' ? 'lost' : ''}`} />
                                     </div>
                                     <div className='game-center-card-text'>Player's Card</div>
                                 </div>
@@ -344,7 +360,7 @@ const Game = () => {
                                     </div>)}
                                     {winner === 'Player' && (<div className='game-winner-card-player'>
                                         <GiChest className="game-chest-icon" />
-                                        <div className='game-center-card-text'>You got a card draw !! Avail at Inventory</div>
+                                        <div className='game-center-card-text'>You got {gameData.game_type === '7v7' ? 1 : (gameData.game_type === '11v11' ? 2 : (gameData.game_type === '15v15' ? 3 : 1))} card draw !! Avail at Inventory</div>
                                     </div>)}
                                 </div>
                             </div>

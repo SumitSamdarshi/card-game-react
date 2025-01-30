@@ -9,6 +9,8 @@ import { toast } from "react-toastify";
 import { TiEdit } from "react-icons/ti";
 import { ClipLoader } from "react-spinners";
 
+const images = require.context('../../images', false, /\.(png|jpe?g|gif)$/);
+
 const Inventory = () => {
   const navigate = useNavigate();
   const userData = getCurrentUser();
@@ -106,10 +108,10 @@ const Inventory = () => {
         setActiveSection('All');
         toast.error("Something went wrong !!", {
           style: {
-              backgroundColor: "black",
-              color: "#ea9828",
+            backgroundColor: "black",
+            color: "#ea9828",
           }
-      });
+        });
       });
 
     setIsSelecting(false);
@@ -143,10 +145,10 @@ const Inventory = () => {
       .catch(() => {
         toast.error("Something went wrong !!", {
           style: {
-              backgroundColor: "black",
-              color: "#ea9828",
+            backgroundColor: "black",
+            color: "#ea9828",
           }
-      });
+        });
       });
     setIsLoading(false);
   }
@@ -162,7 +164,7 @@ const Inventory = () => {
         setTimeout(() => {
           setIsLoading(false);
 
-      }, 3000);
+        }, 300);
         return response.json();
       })
       .then((data) => {
@@ -181,10 +183,10 @@ const Inventory = () => {
       .catch(() => {
         toast.error("Something went wrong !!", {
           style: {
-              backgroundColor: "black",
-              color: "#ea9828",
+            backgroundColor: "black",
+            color: "#ea9828",
           }
-      });
+        });
       });
   };
 
@@ -220,23 +222,25 @@ const Inventory = () => {
           } else {
             toast.error("Something went wrong !!", {
               style: {
-                  backgroundColor: "black",
-                  color: "#ea9828",
+                backgroundColor: "black",
+                color: "#ea9828",
               }
-          });
+            });
           }
         } catch (error) {
           toast.error("Something went wrong !!", {
             style: {
-                backgroundColor: "black",
-                color: "#ea9828",
+              backgroundColor: "black",
+              color: "#ea9828",
             }
-        });
+          });
         }
       }
     };
     input.click();
   };
+
+  const activeImageSrc = activeCard ? images(`./${activeCard.cardId.toString().padStart(3, '0')}.png`) : null;
 
   return (
     <div className="inventory-container">
@@ -281,7 +285,7 @@ const Inventory = () => {
                   <span className="inventory-info-value">{userData.winStreak}</span>
                 </div>
                 <div className="inventory-info-item">
-                  <span className="inventory-info-label">Loss:</span>
+                  <span className="inventory-info-label">Losses:</span>
                   <span className="inventory-info-value">{userData.losses}</span>
                 </div>
                 <div className="inventory-info-item">
@@ -350,11 +354,15 @@ const Inventory = () => {
         </div>
 
         <div className="inventory-cards-container" style={blurBg}>
-          {cards.map((card, index) => (
-            <div key={card.id} className={`inventory-card ${selectedCards.includes((card.cardId + '-' + index)) ? "selected" : ""}`} onClick={() => handleCardClick(card, index)}>
-              <img src={`${BASE_URL}/card-game/api/cards/image/card/${card.cardImage}`} alt={card.name} className="inventory-card-image" />
-            </div>
-          ))}
+          {cards.map((card, index) => {
+            const imageSrc = images(`./${card.cardId.toString().padStart(3, '0')}.png`);
+
+            return (
+              <div key={card.cardId} className={`inventory-card ${selectedCards.includes((card.cardId + '-' + index)) ? "selected" : ""}`} onClick={() => handleCardClick(card, index)}>
+                <img src={imageSrc} alt={card.name} className="inventory-card-image" />
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -363,7 +371,7 @@ const Inventory = () => {
           {newCard && (<div className="inventory-modal-overlay-text">You got this card !!</div>)}
           <div className="inventory-modal-card" onClick={(e) => e.stopPropagation()}>
             <div className="inventory-modal-card-content">
-              <img src={`${BASE_URL}/card-game/api/cards/image/card/${activeCard.cardImage}`} alt={activeCard.name} className="inventory-card-image" />
+              <img src={activeImageSrc} alt={activeCard.name} className="inventory-card-image" />
             </div>
           </div>
         </div>

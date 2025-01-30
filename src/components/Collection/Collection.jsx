@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import { toast } from "react-toastify";
 
+const images = require.context('../../images', false, /\.(png|jpe?g|gif)$/);
+
 const Collection = () => {
     const navigate = useNavigate();
 
@@ -34,7 +36,7 @@ const Collection = () => {
             .then((response) => {
                 setTimeout(() => {
                     setIsLoading(false);
-                }, 3000);
+                }, 300);
                 return response.json();
             })
             .then((data) => {
@@ -68,6 +70,8 @@ const Collection = () => {
         fetchCards(activeSection);
     }, [activeSection]);
 
+    const activeImageSrc = activeCard ? images(`./${activeCard.cardId.toString().padStart(3, '0')}.png`) : null;
+
     return (
         <div className="collection-container">
             <div className="collection-heading-container">All Cards Available on this game</div>
@@ -84,17 +88,21 @@ const Collection = () => {
                 ))}
             </div>
             <div className="collection-cards-container" style={blurBg}>
-                {cards.map((card) => (
-                    <div key={card.id} className="collection-card" onClick={() => handleCardClick(card)}>
-                        <img src={`${BASE_URL}/card-game/api/cards/image/card/${card.cardImage}`} alt={card.name} className="collection-card-image" />
-                    </div>
-                ))}
+                {cards.map((card) => {
+                    const imageSrc = images(`./${card.cardId.toString().padStart(3, '0')}.png`);
+
+                    return (
+                        <div key={card.cardId} className="collection-card" onClick={() => handleCardClick(card)}>
+                            <img src={imageSrc} alt={card.name} className="collection-card-image" />
+                        </div>
+                    );
+                })}
             </div>
             {activeCard && (
                 <div className="collection-modal-overlay" onClick={closeModal}>
                     <div className="collection-modal-card" onClick={(e) => e.stopPropagation()}>
                         <div className="collection-modal-card-content">
-                            <img src={`${BASE_URL}/card-game/api/cards/image/card/${activeCard.cardImage}`} alt={activeCard.name} className="collection-card-image" />
+                            <img src={activeImageSrc} alt={activeCard.name} className="collection-card-image" loading="lazy" />
                         </div>
                     </div>
                 </div>
