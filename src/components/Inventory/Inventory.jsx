@@ -164,7 +164,7 @@ const Inventory = () => {
         setTimeout(() => {
           setIsLoading(false);
 
-        }, 300);
+        }, 30);
         return response.json();
       })
       .then((data) => {
