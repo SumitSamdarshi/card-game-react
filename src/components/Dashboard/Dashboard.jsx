@@ -4,7 +4,7 @@ import { doLogOut, getCurrentUser, updateUser } from "../../auth/auth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { IoMdArrowRoundBack } from "react-icons/io";
-import { BASE_URL, apiService } from "../../service/user-service";
+import { apiService } from "../../service/user-service";
 import { ClipLoader } from "react-spinners";
 
 const images = require.context('../../images', false, /\.(png|jpe?g|gif)$/);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Collection.css";
-import { BASE_URL, apiService } from "../../service/user-service";
+import { apiService } from "../../service/user-service";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
