@@ -36,7 +36,7 @@ const Collection = () => {
             .then((response) => {
                 setTimeout(() => {
                     setIsLoading(false);
-                }, 5);
+                }, 2);
                 return response.json();
             })
             .then((data) => {

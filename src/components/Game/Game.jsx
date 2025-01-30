@@ -61,7 +61,7 @@ const Game = () => {
             .then((response) => {
                 setTimeout(() => {
                     setIsLoading(false);
-                }, 10);
+                }, 5);
                 return response.json();
             })
             .then((data) => {
@@ -120,7 +120,7 @@ const Game = () => {
                     setTimeout(() => {
                         setIsLoading(false);
 
-                    }, 15);
+                    }, 7);
                     return response.json();
                 })
                 .then((data) => {

@@ -243,19 +243,30 @@
   height: 80%;
 }
 
+.dashboard-rounded-button:hover {
+  background-color: #EA7828;
+  transform: scale(1.1);
+}
+
+.dashboard-rounded-button:disabled {
+  background-color: grey;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .dashboard-note-container{
   display: flex;
   justify-content: space-around;
   margin-bottom: 30px;
+  align-items: center;
 }
 
 .dashboard-note-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 15px;
-  background-color: #EA9828;
-  ;
+  padding: 10px 20px;
+  background-color: #EA9828;;
   border-radius: 25px;
   box-sizing: border-box;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -276,6 +287,12 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.dashboard-custom-text{
+  font-size: 20px;
+  color: #EA6828;
+  margin-bottom : 20px;
 }
 
 .dashoard-modal-button:hover {

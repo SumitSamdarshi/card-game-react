@@ -52,6 +52,8 @@ const Dashboard = () => {
 
     const closeModal = () => {
         setIsModalVisible(false);
+        setSelectedCards([]);
+        setCustomSelect(false);
     };
 
     const handleCustomSelect = () => {
@@ -168,7 +170,7 @@ const Dashboard = () => {
 
             {customSelect && (<div className="dashoard-modal-overlay">
                 <div className="dashoard-modal-content">
-                    <p>Select cards you want to play with (min:5) </p>
+                    <div className="dashboard-custom-text">Select cards you want to play with (min:5) </div>
                     <div className="dashboard-note-container">
                         <div className="dashboard-note-card">
                             <span className="dahboard-note-text">Cards Selected : {selectedCards.length}</span>
@@ -176,12 +178,6 @@ const Dashboard = () => {
                         <button className="dashboard-rounded-button" onClick={handleCustomPlay} disabled={selectedCards.length < 5}>Play</button>
                     </div>
                     <div className="dashoard-custom-cards-container">
-                        {/* {allDistinctCards.map((card) => (
-                            <div key={card.cardId} className={`dashoard-custom-card-wrapper ${selectedCards.some((c) => c.cardId === card.cardId) ? "selected" : ""}`}>
-                                <img className="dashoard-card" src={`${BASE_URL}/card-game/api/cards/image/card/${card.cardImage}`} alt={`dashboard-card ${card.Id}`}
-                                    onClick={() => handleCardClick(card)} />
-                            </div>
-                        ))} */}
 
                         {allDistinctCards.map((card) => {
                             const imageSrc = images(`./${card.cardId.toString().padStart(3, '0')}.png`);
