@@ -386,6 +386,15 @@
     font-weight: bold;
     color: black;
 }
+.pvp-player-waiting{
+    position: absolute;
+    font-size: 30px;
+    font-weight: bold;
+    color: #Ea6828;
+    top: 40%;
+    width: 75%;
+    text-align: center;
+}
 
 @media (max-width: 800px) {
     .game-player-cards {

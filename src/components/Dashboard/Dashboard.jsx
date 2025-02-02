@@ -125,6 +125,15 @@ const Dashboard = () => {
     }
 
     const handleCreate = () => {
+        if(createInput < 5){
+            toast.error("Min. 5v5 card game possible", {
+                style: {
+                    backgroundColor: "black",
+                    color: "#ea9828",
+                }
+            });
+            return ;
+        }
         if(isMusicPlaying){
             playClickSound();
         }
@@ -218,7 +227,7 @@ const Dashboard = () => {
             {isModalVisible && (
                 <div className="dashoard-modal-overlay">
                     <div className="dashoard-modal-content">
-                        <p>You got these cards as starter:</p>
+                    <div className="dashboard-custom-text">You got these cards as starter: </div>
                         <div className="dashoard-cards-container">
                             {cardData.map((card) => {
                                 const imageSrc = images(`./${card.cardId.toString().padStart(3, '0')}.png`);

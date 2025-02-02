@@ -380,7 +380,7 @@ const Inventory = () => {
             const imageSrc = images(`./${card.cardId.toString().padStart(3, '0')}.png`);
 
             return (
-              <div key={card.cardId} className={`inventory-card ${selectedCards.includes((card.cardId + '-' + index)) ? "selected" : ""}`} onClick={() => handleCardClick(card, index)}>
+              <div key={index} className={`inventory-card ${selectedCards.includes((card.cardId + '-' + index)) ? "selected" : ""}`} onClick={() => handleCardClick(card, index)}>
                 <img src={imageSrc} alt={card.name} className="inventory-card-image" />
               </div>
             );

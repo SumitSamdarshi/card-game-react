@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './PvP.css';
 import baseImage from "../../images/000.png";
 import { getCurrentUser, getPvp, updateUser } from '../../auth/auth';
-import { BASE_URL, apiService } from '../../service/user-service';
+import { apiService } from '../../service/user-service';
 import { toast } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ClipLoader } from 'react-spinners';
@@ -34,6 +34,7 @@ const PvP = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [playerLostCard, setPlayerLostCard] = useState(null);
     const [otherplayerName, setOtherPlayerName] = useState(null);
+    const [isPlayerJoined,setPlayerJoined]=useState('false');
     const currentPlayer = getPvp();
     const currentUser = getCurrentUser();
 
@@ -59,7 +60,7 @@ const PvP = () => {
         setStatSelected(stat);
     };
 
-    const callApi = () => {
+    const callEnquiryApi = () => {
         return apiService.get(`/card-game/api/pvp/enquiry/${gameData.pvpGameId}/${currentPlayer.charAt(currentPlayer.length - 1)}`)
             .then((response) => {
                 return response.json();
@@ -75,11 +76,11 @@ const PvP = () => {
 
     const handleEnquiry = () => {
         let attempts = 0;
-        const maxAttempts = 10;
+        const maxAttempts = 20;
 
         const intervalId = setInterval(() => {
             attempts++;
-            callApi().then(data => {
+            callEnquiryApi().then(data => {
                 if (data.roundWinner !== null) {
                     setIsLoading(false);
                     const compCards = computerCards;
@@ -96,7 +97,6 @@ const PvP = () => {
                         setPlayerScore(data?.playerTwoScore);
                         setComputerStat(data.stat);
                     }
-                    
                     setRoundWinner(data.roundWinner);
                     setPlayerLostCard(data.rewardCard)
                     const compImageSrc = images(`./${data.otherPlayerCard.cardId.toString().padStart(3, '0')}.png`);
@@ -205,9 +205,11 @@ const PvP = () => {
                     setPlayerCards(data.playerOneCards);
                     setComputerScore(data?.playerTwoScore);
                     setPlayerScore(data?.playerOneScore);
-                    setOtherPlayerName(data.playerTwoName);
                     setPlayerTurn('p1');
-                    console.log("Current Player turn : ", 'p1');
+                    setTimeout(() => {
+                        loadOtherPlayer(data.pvpGameId);
+                    }, 1000);
+                    
                 })
                 .catch(() => {
                     console.log("error : ");
@@ -259,6 +261,7 @@ const PvP = () => {
                     setPlayerScore(data?.playerTwoScore);
                     setOtherPlayerName(data.playerOneName);
                     setPlayerTurn('p1');
+                    setPlayerJoined(false);
                 })
                 .catch(() => {
                     console.log("error : ");
@@ -270,6 +273,53 @@ const PvP = () => {
                     });
                 });
         }
+
+        const loadOtherPlayer = (gameId) =>{
+            setIsLoading(true);
+            setPlayerJoined(true);
+            let attempts = 0;
+            const maxAttempts = 20;
+            const intervalId = setInterval(() => {
+                attempts++;
+                callApi(gameId).then(data => {
+                    if (data.playerTwoName !== null) {
+                        toast.success("Player Joined !", {
+                            style: {
+                                backgroundColor: "black",
+                                color: "#ea9828",
+                            }
+                        })
+                        setPlayerJoined(false);
+                        setIsLoading(false);
+                        setOtherPlayerName(data.playerTwoName);
+                        clearInterval(intervalId);
+                    }
+                    if (attempts >= maxAttempts) {
+                        toast.error("Player did not join ! Create new game ", {
+                            style: {
+                                backgroundColor: "black",
+                                color: "#ea9828",
+                            }
+                        });
+                        clearInterval(intervalId);
+                        navigate("/player/dashboard");
+                    }
+                });
+            }, 5000);
+        }
+
+        const callApi = (gameId) => {
+            return apiService.get(`/card-game/api/pvp/enquiry/${gameId}/${getPvp().charAt(getPvp().length - 1)}`)
+                .then((response) => {
+                    return response.json();
+                })
+                .then((data) => {
+                    return data;
+                })
+                .catch(() => {
+                    return;
+                });
+        };
 
         if (getPvp() === 'p1') {
             createPvpGame();
@@ -327,6 +377,7 @@ const PvP = () => {
     }
 
     const selectedCardImageSrc = selectedCard ? images(`./${selectedCard.cardId.toString().padStart(3, '0')}.png`) : null;
+    const playerLostCardImageSrc = playerLostCard ? images(`./${playerLostCard.cardId.toString().padStart(3, '0')}.png`) : null;
 
     return (
         <>
@@ -340,7 +391,7 @@ const PvP = () => {
                         <PiSpeakerSlashFill />
                     )}
                 </div>
-                <div className="game-name-tag-computer">{otherplayerName == null ? 'Opponent' : otherplayerName}</div>
+                <div className="game-name-tag-computer">{otherplayerName == null ? 'Opponent' : otherplayerName.toUpperCase()}</div>
                 <div className="game-card-sub-conainter">
                     <div className="game-computer-cards">
                         {computerCards.map((card, index) => (
@@ -349,10 +400,10 @@ const PvP = () => {
                             </div>
                         ))}
                     </div>
-                    <div className='game-turn'>{((playerTurn === 'p1' && currentPlayer === 'p1') || (playerTurn === 'p2' && currentPlayer === 'p2')) ? "Player's" : "Opponent"} turn</div>
+                    <div className='game-turn'>{((playerTurn === 'p1' && currentPlayer === 'p1') || (playerTurn === 'p2' && currentPlayer === 'p2')) ? `${currentUser.name}'s` : `${otherplayerName}'s`} turn</div>
                     <div className="game-scores">
-                        <div className="game-player-score">Player Score: {playerScore}</div>
-                        <div className="game-computer-score">Opponent Score: {computerScore}</div>
+                        <div className="game-player-score">{currentUser.name}'s Score: {playerScore}</div>
+                        <div className="game-computer-score">{otherplayerName}'s Score: {computerScore}</div>
                     </div>
                     <div className='game-turn-text'>{showStats ? (((playerTurn === 'p1' && currentPlayer === 'p1') || (playerTurn === 'p2' && currentPlayer === 'p2')) ? "Select a stat !!" : "Select a card !!") : "Select a card !!"} </div>
 
@@ -386,7 +437,7 @@ const PvP = () => {
                         </div>
                     )}
                 </div>
-                <div className="game-name-tag-player">{getCurrentUser().name}</div>
+                <div className="game-name-tag-player">{getCurrentUser().name.toUpperCase()}</div>
 
                 {statSelected && (
                     <div className="game-modal-overlay">
@@ -395,10 +446,10 @@ const PvP = () => {
                                 {roundWinner === 'draw' ? (
                                     <p>Draw</p>
                                 ) : roundWinner === 'p1' ? currentPlayer === 'p1' ? (
-                                    <p>Player wins this round, next turn : opponent</p>
+                                    <p>{currentUser.name} wins this round, next turn : {otherplayerName}</p>
                                 ) : (
-                                    <p>Opponent wins this round, next turn : player</p>
-                                ) : currentPlayer === 'p1' ? (<p>Opponent wins this round, next turn : player</p>) : (<p>Player wins this round, next turn : opponent</p>)}
+                                    <p>{otherplayerName} wins this round, next turn : {currentUser.name}</p>
+                                ) : currentPlayer === 'p1' ? (<p>{otherplayerName} wins this round, next turn : {currentUser.name}</p>) : (<p>{currentUser.name} wins this round, next turn : {otherplayerName}</p>)}
                             </div>)}
                             <div className="game-cards-display">
                                 <div className="game-card-wrapper">
@@ -420,9 +471,9 @@ const PvP = () => {
                             {roundOver && (
                                 <div className='game-stat-text'>
                                     {((playerTurn === 'p1' && currentPlayer === 'p1') || (playerTurn === 'p2' && currentPlayer === 'p2')) ? (
-                                        <p>Player picked : {statSelected}</p>
+                                        <p>{currentUser.name} picked : {statSelected}</p>
                                     ) : (
-                                        <p>Opponent picked : {computerStat}</p>
+                                        <p>{otherplayerName} picked : {computerStat}</p>
                                     )}
                                 </div>
                             )}
@@ -445,7 +496,7 @@ const PvP = () => {
                             <div className="game-winner-card-display">
                                 <div className="game-winner-card-wrapper">
                                     {winner !== 'draw' && playerLostCard && (<div className='game-winner-card-computer'>
-                                        <img src={`${BASE_URL}/card-game/api/cards/image/card/${playerLostCard.cardImage}`} alt="Player's Card" className="game-winner-card" />
+                                        <img src={playerLostCardImageSrc} alt="Player's Card" className="game-winner-card" />
                                         <div className='game-center-card-text'>{winner === 'p1' ? currentPlayer === 'p1' ? (
                                             <p>You win this card</p>
                                         ) : (
@@ -463,6 +514,7 @@ const PvP = () => {
 
                 {isLoading && (
                     <div className="game-modal-overlay">
+                        {isPlayerJoined && (<div className='pvp-player-waiting'>Waiting for other player to Join</div>)}
                         <ClipLoader size={50} color={"#3498db"} loading={isLoading} />
                     </div>
                 )}

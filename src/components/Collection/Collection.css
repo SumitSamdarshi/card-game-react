@@ -128,8 +128,8 @@
 .collection-sound{
   position: fixed;
   z-index: 1001;
-  left: 10%;
-  top: 2%;
+  left: 3%;
+  top: 7%;
   font-size: 45px;
 }
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './Game.css'; // Include a CSS file for styling
 import baseImage from "../../images/000.png";
 import { getCurrentUser, updateUser } from '../../auth/auth';
-import { BASE_URL, apiService } from '../../service/user-service';
+import { apiService } from '../../service/user-service';
 import { toast } from 'react-toastify';
 import { GiChest } from 'react-icons/gi';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -260,6 +260,7 @@ const Game = () => {
     }
 
     const selectedCardImageSrc = selectedCard ? images(`./${selectedCard.cardId.toString().padStart(3, '0')}.png`) : null;
+    const playerLostCardImageSrc = playerLostCard ? images(`./${playerLostCard.cardId.toString().padStart(3, '0')}.png`) : null;
 
     return (
         <>
@@ -275,7 +276,7 @@ const Game = () => {
 
                 <div className="game-quit-button-container">
                     <FaPowerOff className="game-quit-icon" onClick={handleQuit} />
-                    <div className="game-quit-info-div">Combine same type of cards to get upgraded card</div>
+                    <div className="game-quit-info-div">You will lose one card !</div>
                 </div>
                 <ClipLoader size={50} color={"#3498db"} loading={isLoading} />
                 <div className="game-name-tag-computer">Computer</div>
@@ -378,7 +379,7 @@ const Game = () => {
                             <div className="game-winner-card-display">
                                 <div className="game-winner-card-wrapper">
                                     {winner === 'Computer' && playerLostCard && (<div className='game-winner-card-computer'>
-                                        <img src={`${BASE_URL}/card-game/api/cards/image/card/${playerLostCard.cardImage}`} alt="Player's Card" className="game-winner-card" />
+                                        <img src={playerLostCardImageSrc} alt="Player's Card" className="game-winner-card" />
                                         <div className='game-center-card-text'>You lost this card</div>
                                     </div>)}
                                     {winner === 'Player' && (<div className='game-winner-card-player'>
