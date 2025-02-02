@@ -20,6 +20,17 @@ export const doLogOut = (next) => {
     next()
 }
 
+export const addPvp = (data) => {
+    localStorage.removeItem('pvp');
+    localStorage.setItem("pvp", JSON.stringify(data));
+}
+
+export const getPvp = () =>{
+    if(localStorage.getItem('pvp')!=null){
+        return JSON.parse(localStorage.getItem('pvp'))
+    }
+}
+
 
 //getcurrentData
 export const getCurrentUser = () => {

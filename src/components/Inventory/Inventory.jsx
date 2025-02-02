@@ -8,6 +8,8 @@ import { GiChest, GiUpgrade } from "react-icons/gi";
 import { toast } from "react-toastify";
 import { TiEdit } from "react-icons/ti";
 import { ClipLoader } from "react-spinners";
+import { playClickSound, useMusic } from "../Music/MusicProvider";
+import { PiSpeakerHighFill, PiSpeakerSlashFill } from "react-icons/pi";
 
 const images = require.context('../../images', false, /\.(png|jpe?g|gif)$/);
 
@@ -25,6 +27,7 @@ const Inventory = () => {
   const [toggle, setToggle] = useState(false);  // just to refreash page 
   const [noOfCardsCombine, setNoOfCardsCombine] = useState(3);
   const [isLoading, setIsLoading] = useState(false);
+  const { isMusicPlaying, toggleMusic } = useMusic();
 
   const blurBg = activeCard != null ? { opacity: '25%' } : {};
 
@@ -44,6 +47,9 @@ const Inventory = () => {
   }
 
   const handleCardClick = (card, index) => {
+    if (isMusicPlaying) {
+      playClickSound();
+    }
     if (isSelecting) {
       const selectedCardsKey = card.cardId + '-' + index;
       if (selectedCards.includes(selectedCardsKey)) {
@@ -62,6 +68,9 @@ const Inventory = () => {
   };
 
   const toggleSelectionMode = () => {
+    if(isMusicPlaying){
+      playClickSound();
+  }
     if (!isSelecting) {
       setActiveSection('Common');
       setNoOfCardsCombine(3);
@@ -75,6 +84,9 @@ const Inventory = () => {
   };
 
   const handleCombine = () => {
+    if(isMusicPlaying){
+      playClickSound();
+  }
     setIsLoading(true);
 
     const newCards = selectedCards.map(card => card.split('-')[0]);
@@ -121,6 +133,9 @@ const Inventory = () => {
   };
 
   const handleDraw = () => {
+    if(isMusicPlaying){
+      playClickSound();
+  }
     setIsLoading(true);
     apiService.post('/card-game/api/cards/draw', userData)
       .then((response) => {
@@ -244,6 +259,13 @@ const Inventory = () => {
 
   return (
     <div className="inventory-container">
+      <div className="inventory-sound" onClick={toggleMusic} style={{ cursor: 'pointer' }}>
+        {isMusicPlaying ? (
+          <PiSpeakerHighFill />
+        ) : (
+          <PiSpeakerSlashFill />
+        )}
+      </div>
       <IoMdArrowRoundBack onClick={handleBackClick} className="inventory-back-icon" />
       {!isSelecting && (
         <div className="inventory-profile-container" style={blurBg}>

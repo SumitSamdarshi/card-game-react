@@ -105,3 +105,15 @@
   margin-bottom: 10px;
   color: black;
 }
+
+.home-sound{
+  position: fixed;
+  z-index: 1001;
+  left: 2%;
+  top: 2%;
+  font-size: 45px;
+}
+
+.home-sound:hover{
+  transform: scale(1.1);
+}

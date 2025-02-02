@@ -8,6 +8,7 @@ import Inventory from './components/Inventory/Inventory';
 import Home from './components/Home/Home';
 import Collection from './components/Collection/Collection';
 import Game from './components/Game/Game';
+import PvP from './components/PvP/PvP';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="dashboard" element={<Dashboard/>}/>
           <Route path="inventory" element={<Inventory/>}/>
           <Route path="game" element={<Game/>}/>
+          <Route path="pvp" element={<PvP/>}/>
         </Route>
     </Routes>
     </BrowserRouter>

@@ -419,8 +419,8 @@
   position: fixed;
   cursor: pointer;
   font-size: 40px;
-  top: 20px;
-  left: 20px;
+  top: 2%;
+  left: 2%;
   z-index: 1000;
 }
 
@@ -464,3 +464,15 @@
       padding: 0;
     }
 } 
+
+.inventory-sound{
+  position: fixed;
+  z-index: 1001;
+  left: 3%;
+  top: 7%;
+  font-size: 30px;
+}
+
+.inventory-sound:hover{
+  transform: scale(1.1);
+}

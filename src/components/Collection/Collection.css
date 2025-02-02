@@ -110,8 +110,8 @@
   position: fixed;
   cursor: pointer;
   font-size: 50px;
-  top: 20px;
-  left: 20px;
+  top: 2%;
+  left: 2%;
   z-index: 1000;
 }
 
@@ -124,3 +124,15 @@
     grid-template-columns:repeat(auto-fill, minmax(25%, 1fr))
   }
 } 
+
+.collection-sound{
+  position: fixed;
+  z-index: 1001;
+  left: 10%;
+  top: 2%;
+  font-size: 45px;
+}
+
+.collection-sound:hover{
+  transform: scale(1.1);
+}

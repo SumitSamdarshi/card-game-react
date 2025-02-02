@@ -5,10 +5,13 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { IoMdArrowRoundBack } from 'react-icons/io';
 import { ClipLoader } from 'react-spinners';
+import { PiSpeakerHighFill, PiSpeakerSlashFill } from 'react-icons/pi';
+import { playClickSound, useMusic } from '../Music/MusicProvider';
 
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const { isMusicPlaying, toggleMusic } = useMusic();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -23,6 +26,9 @@ const SignUp = () => {
   };
 
   const handleSubmit = (e) => {
+    if (isMusicPlaying) {
+      playClickSound();
+    }
     e.preventDefault();
     setIsLoading(true);
 
@@ -33,9 +39,9 @@ const SignUp = () => {
       })
       .then((data) => {
         if (data?.success === false) {
-          toast.error(data.message,{
+          toast.error(data.message, {
             style: {
-              backgroundColor: "black",  
+              backgroundColor: "black",
               color: "#ea9828",
             }
           });
@@ -55,12 +61,12 @@ const SignUp = () => {
       .catch(() => {
         toast.error("Something went wrong !!", {
           style: {
-              backgroundColor: "black",
-              color: "#ea9828",
+            backgroundColor: "black",
+            color: "#ea9828",
           }
+        });
       });
-      });
-      setIsLoading(false);
+    setIsLoading(false);
   };
 
   const handleBackClick = () => {
@@ -69,6 +75,13 @@ const SignUp = () => {
 
   return (
     <div className="signup-container">
+      <div className="signup-sound" onClick={toggleMusic} style={{ cursor: 'pointer' }}>
+        {isMusicPlaying ? (
+          <PiSpeakerHighFill />
+        ) : (
+          <PiSpeakerSlashFill />
+        )}
+      </div>
       <IoMdArrowRoundBack onClick={handleBackClick} className="signup-back-icon" />
       <form className="signup-form" onSubmit={handleSubmit}>
         <h2>Sign Up</h2>

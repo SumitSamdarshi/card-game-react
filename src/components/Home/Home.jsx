@@ -1,15 +1,24 @@
 import React, { useState } from "react";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
+import { playClickSound, useMusic } from "../Music/MusicProvider";
+import { PiSpeakerHighFill, PiSpeakerSlashFill } from "react-icons/pi";
 
 const Home = () => {
     const navigate = useNavigate();
+    const { isMusicPlaying, toggleMusic } = useMusic();
 
     const handleLoginClick = () => {
+        if(isMusicPlaying){
+            playClickSound();
+        }
         navigate("/login")
     };
 
     const handleRegisterClick = () => {
+        if(isMusicPlaying){
+            playClickSound();
+        }
         navigate("/collection")
     };
 
@@ -18,6 +27,9 @@ const Home = () => {
 
 
     const handleRulesClick = () => {
+        if(isMusicPlaying){
+            playClickSound();
+        }
         setRulesClicked(!rulesClicked);
     };
 
@@ -27,6 +39,13 @@ const Home = () => {
 
     return (
         <div className="home-container">
+            <div className="home-sound" onClick={toggleMusic} style={{ cursor: 'pointer' }}>
+                {isMusicPlaying ? (
+                    <PiSpeakerHighFill />
+                ) : (
+                    <PiSpeakerSlashFill />
+                )}
+            </div>
             <div className="home-sub-container">
                 <div className="home-center-buttons" style={blurBg}>
                     <button className="home-action-button" onClick={handleLoginClick}>
@@ -54,11 +73,12 @@ const Home = () => {
                                 <li>Players can combine cards to create a higher rarity card.</li>
                                 <li>Players can draw a card from the chest, which they receive after winning a game.</li>
                             </ul>
-                            
+
                             <h4 className="rule-subheading">Game</h4>
                             <ul className="rule-list">
-                                <li>For game types are available, with options for 7, 11, 15 or custom no of cards.</li>
+                                <li>Four game types are available, with options for 7, 11, 15 or custom no of cards.</li>
                                 <li>The number of cards drawn will depend on the chosen game type.</li>
+                                <li>New PVP mode is added to play against real player</li>
                                 <li>Player cards will be drawn based on the unique cards in the player’s deck.</li>
                                 <li>Computer cards will be drawn according to the rarity of the player’s cards.</li>
                                 <li>At the start of game, player will take the first turn.</li>
@@ -71,7 +91,7 @@ const Home = () => {
                                 <li>Rewards 7v7 : 1-chest, 11v11 : 2-chest, 15v15 : 3-chest and custom : 1-chest.</li>
                                 <li>If the player loses, one card from the player’s deck will be forfeited.</li>
                             </ul>
-                            
+
                         </div>
                     </div>
                 </div>

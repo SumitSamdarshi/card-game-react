@@ -5,11 +5,14 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import { toast } from "react-toastify";
+import { PiSpeakerHighFill, PiSpeakerSlashFill } from "react-icons/pi";
+import { playClickSound, useMusic } from "../Music/MusicProvider";
 
 const images = require.context('../../images', false, /\.(png|jpe?g|gif)$/);
 
 const Collection = () => {
     const navigate = useNavigate();
+    const { isMusicPlaying, toggleMusic } = useMusic();
 
     const [activeCard, setActiveCard] = useState(null);
     const blurBg = activeCard != null ? { opacity: '25%' } : {};
@@ -17,6 +20,9 @@ const Collection = () => {
 
 
     const handleCardClick = (card) => {
+        if(isMusicPlaying){
+            playClickSound();
+        }
         setActiveCard(card);
     };
 
@@ -74,6 +80,13 @@ const Collection = () => {
 
     return (
         <div className="collection-container">
+            <div className="collection-sound" onClick={toggleMusic} style={{ cursor: 'pointer' }}>
+                {isMusicPlaying ? (
+                    <PiSpeakerHighFill />
+                ) : (
+                    <PiSpeakerSlashFill />
+                )}
+            </div>
             <div className="collection-heading-container">All Cards Available on this game</div>
             <IoMdArrowRoundBack onClick={handleBackClick} className="collection-back-icon" />
             <div className="collection-bar-container" style={blurBg}>

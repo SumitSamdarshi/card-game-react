@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
 import "./Dashboard.css";
-import { doLogOut, getCurrentUser, updateUser } from "../../auth/auth";
+import { addPvp, doLogOut, getCurrentUser, updateUser } from "../../auth/auth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { apiService } from "../../service/user-service";
 import { ClipLoader } from "react-spinners";
+import { PiSpeakerHighFill, PiSpeakerSlashFill } from "react-icons/pi";
+import { playClickSound, useMusic } from "../Music/MusicProvider";
 
 const images = require.context('../../images', false, /\.(png|jpe?g|gif)$/);
 
 const Dashboard = () => {
     const navigate = useNavigate();
+    const { isMusicPlaying, toggleMusic } = useMusic();
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [cardData, setCardData] = useState([]);
     const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -19,6 +22,9 @@ const Dashboard = () => {
     const [customSelect, setCustomSelect] = useState(false);
     const [allDistinctCards, setAllDistinctCards] = useState([]);
     const [selectedCards, setSelectedCards] = useState([]);
+    const [isPvpDropdownOpen, setPvpDropdownOpen] = useState(false);
+    const [createInput, setCreateInput] = useState('');
+    const [joinInput, setJoinInput] = useState('');
 
 
     const handleOptionSelect = (type) => {
@@ -31,10 +37,16 @@ const Dashboard = () => {
     };
 
     const handleInventoryClick = () => {
+        if(isMusicPlaying){
+            playClickSound();
+        }
         navigate("/player/inventory")
     };
 
     const handleLogoutClick = () => {
+        if(isMusicPlaying){
+            playClickSound();
+        }
         doLogOut(() => {
             toast.success("LogOut Successful !", {
                 style: {
@@ -57,6 +69,9 @@ const Dashboard = () => {
     };
 
     const handleCustomSelect = () => {
+        if(isMusicPlaying){
+            playClickSound();
+        }
         const user = getCurrentUser();
         setIsLoading(true);
         apiService.get(`/card-game/api/cards/distinct/user/${user.user_id}`)
@@ -98,7 +113,9 @@ const Dashboard = () => {
     }
 
     const handleCustomPlay = () => {
-        console.log("custom play button clicked");
+        if(isMusicPlaying){
+            playClickSound();
+        }
         navigate("/player/game", {
             state: {
                 'type': 'custom',
@@ -107,6 +124,32 @@ const Dashboard = () => {
         })
     }
 
+    const handleCreate = () => {
+        if(isMusicPlaying){
+            playClickSound();
+        }
+        setPvpDropdownOpen(false);
+        console.log("create : ", createInput);
+        addPvp("p1");
+        navigate("/player/pvp", {
+            state: {
+                'create': createInput
+            }
+        });
+    }
+
+    const handleJoin = () => {
+        if(isMusicPlaying){
+            playClickSound();
+        }
+        addPvp("p2");
+        setPvpDropdownOpen(false);
+        navigate("/player/pvp", {
+            state: {
+                'join': joinInput
+            }
+        });
+    }
 
     useEffect(() => {
         const assignCards = (user) => {
@@ -146,8 +189,32 @@ const Dashboard = () => {
         }
     }, []);
 
+    const handleDropdown = () => {
+        if(isMusicPlaying){
+            playClickSound();
+        }
+        setDropdownOpen(!isDropdownOpen)
+        setPvpDropdownOpen(false);
+    }
+
+    const handlePvpDropdown = () => {
+        if(isMusicPlaying){
+            playClickSound();
+        }
+        setPvpDropdownOpen(!isPvpDropdownOpen);
+        setDropdownOpen(false)
+    }
+
     return (
         <div className="dashboard-container">
+            <div className="dashboard-sound" onClick={toggleMusic} style={{ cursor: 'pointer' }}>
+                {isMusicPlaying ? (
+                    <PiSpeakerHighFill />
+                ) : (
+                    <PiSpeakerSlashFill />
+                )}
+            </div>
+            <IoMdArrowRoundBack onClick={handleBackClick} className="dashboard-back-icon" />
             {isModalVisible && (
                 <div className="dashoard-modal-overlay">
                     <div className="dashoard-modal-content">
@@ -194,7 +261,6 @@ const Dashboard = () => {
             </div>
             )}
 
-            <IoMdArrowRoundBack onClick={handleBackClick} className="dashboard-back-icon" />
             <div className="dashboard-top-right-buttons">
                 <button className="dashboard-logout-button" onClick={handleLogoutClick}>
                     Logout
@@ -209,10 +275,15 @@ const Dashboard = () => {
                             Select Game Type
                         </div>
                     )}
+                    {isPvpDropdownOpen && (
+                        <div className="dashboard-sub-container-text">
+                            Create or Join Game
+                        </div>
+                    )}
                     <div className="dropdown-container">
                         <button
                             className="dashboard-action-button"
-                            onClick={() => setDropdownOpen(!isDropdownOpen)}
+                            onClick={handleDropdown}
                         >
                             Play Game
                         </button>
@@ -233,6 +304,42 @@ const Dashboard = () => {
                                     onClick={handleCustomSelect}
                                 >
                                     Custom
+                                </li>
+                            </ul>
+                        )}
+                    </div>
+                    <div className="dropdown-container">
+                        <button
+                            className="dashboard-action-button"
+                            onClick={handlePvpDropdown}
+                        >
+                            Play PvP
+                        </button>
+                        {isPvpDropdownOpen && (
+                            <ul className="pvp-dropdown-menu">
+                                <li key="create" className="pvp-dropdown-item">
+                                    <div className="dropdown-input-container">
+                                        <input
+                                            type="text"
+                                            placeholder="Enter Game Size"
+                                            className="dropdown-input"
+                                            value={createInput}
+                                            onChange={(e) => setCreateInput(e.target.value)}
+                                        />
+                                        <button className="dropdown-submit-btn" onClick={handleCreate}>Create</button>
+                                    </div>
+                                </li>
+                                <li key="join" className="pvp-dropdown-item">
+                                    <div className="dropdown-input-container">
+                                        <input
+                                            type="text"
+                                            placeholder="Enter Game Code"
+                                            className="dropdown-input"
+                                            value={joinInput}
+                                            onChange={(e) => setJoinInput(e.target.value)}
+                                        />
+                                        <button className="dropdown-submit-btn" onClick={handleJoin}>Join</button>
+                                    </div>
                                 </li>
                             </ul>
                         )}

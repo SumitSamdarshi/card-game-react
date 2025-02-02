@@ -1,23 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import './Game.css'; // Include a CSS file for styling
+import './PvP.css';
 import baseImage from "../../images/000.png";
-import { getCurrentUser, updateUser } from '../../auth/auth';
+import { getCurrentUser, getPvp, updateUser } from '../../auth/auth';
 import { BASE_URL, apiService } from '../../service/user-service';
 import { toast } from 'react-toastify';
-import { GiChest } from 'react-icons/gi';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ClipLoader } from 'react-spinners';
-import { FaPowerOff } from 'react-icons/fa';
 import { playClickSound, useMusic } from '../Music/MusicProvider';
 import { PiSpeakerHighFill, PiSpeakerSlashFill } from 'react-icons/pi';
 
 const images = require.context('../../images', false, /\.(png|jpe?g|gif)$/);
 
-const Game = () => {
+const PvP = () => {
     const navigate = useNavigate();
     const { isMusicPlaying, toggleMusic } = useMusic();
     const location = useLocation();
-    const gameType = location.state;
+    const pvp = location.state;
 
     const [playerCards, setPlayerCards] = useState([]);
     const [computerCards, setComputerCards] = useState([]);
@@ -29,12 +27,17 @@ const Game = () => {
     const [gameData, setGameData] = useState(null);
     const [winner, setWinner] = useState(null);
     const [computerStat, setComputerStat] = useState(null);
-    const [playerTurn, setPlayerTurn] = useState(true);
+    const [playerTurn, setPlayerTurn] = useState('p1');
     const [computerCardImage, setComputerCardImage] = useState(baseImage);
-    const [roundWinner, SetRoundWinner] = useState(null);
+    const [roundWinner, setRoundWinner] = useState(null);
     const [roundOver, setRoundOver] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [playerLostCard, setPlayerLostCard] = useState(null);
+    const [otherplayerName, setOtherPlayerName] = useState(null);
+    const currentPlayer = getPvp();
+    const currentUser = getCurrentUser();
+
+    console.log("Current Player : ", currentPlayer);
 
     const handleCardClick = (card) => {
         if(isMusicPlaying){
@@ -56,23 +59,89 @@ const Game = () => {
         setStatSelected(stat);
     };
 
-    const handleCompare = () => {
+    const callApi = () => {
+        return apiService.get(`/card-game/api/pvp/enquiry/${gameData.pvpGameId}/${currentPlayer.charAt(currentPlayer.length - 1)}`)
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                console.log("enquiry data for ", currentPlayer, data);
+                return data;
+            })
+            .catch(() => {
+                return;
+            });
+    };
+
+    const handleEnquiry = () => {
+        let attempts = 0;
+        const maxAttempts = 10;
+
+        const intervalId = setInterval(() => {
+            attempts++;
+            callApi().then(data => {
+                if (data.roundWinner !== null) {
+                    setIsLoading(false);
+                    const compCards = computerCards;
+                    compCards.shift();
+                    setPlayerCards(playerCards.filter((card) => card.cardId !== selectedCard.cardId));
+                    setComputerCards(compCards);
+                    setGameData(data);
+                    if (currentPlayer === 'p1') {
+                        setComputerScore(data?.playerTwoScore);
+                        setPlayerScore(data?.playerOneScore);
+                        setComputerStat(data?.stat);
+                    } else {
+                        setComputerScore(data?.playerOneScore);
+                        setPlayerScore(data?.playerTwoScore);
+                        setComputerStat(data.stat);
+                    }
+                    
+                    setRoundWinner(data.roundWinner);
+                    setPlayerLostCard(data.rewardCard)
+                    const compImageSrc = images(`./${data.otherPlayerCard.cardId.toString().padStart(3, '0')}.png`);
+                    setComputerCardImage(compImageSrc)
+                    setRoundOver(true);
+
+                    setTimeout(() => {
+                        setWinner(data.winner);
+                    }, 3000);
+
+                    clearInterval(intervalId);
+                }
+                if (attempts >= maxAttempts) {
+                    console.log('Maximum number of attempts reached, stopping polling.');
+                    toast.error("Opponent inactive !! try again", {
+                        style: {
+                            backgroundColor: "black",
+                            color: "#ea9828",
+                        }
+                    });
+                    setStatSelected(null);
+                    setSelectedCard(null);
+                    setIsLoading(false);
+                    clearInterval(intervalId);
+                }
+            });
+        }, 3000);
+    };
+
+    const handleSubmit = () => {
         if(isMusicPlaying){
             playClickSound();
         }
         setIsLoading(true);
         const stat = statSelected === 'select' ? null : statSelected;
 
-        const compareReq = {
-            "gameId": gameData.game_id,
-            "playerCardId": selectedCard.cardId,
+        const submitReq = {
+            "pvpGameId": gameData.pvpGameId,
+            "playerId": currentUser.user_id,
+            "cardId": selectedCard.cardId,
             "stat": stat
         }
-        apiService.post('/card-game/api/games/compareCard', compareReq)
+
+        apiService.post('/card-game/api/pvp/submit', submitReq)
             .then((response) => {
-                setTimeout(() => {
-                    setIsLoading(false);
-                }, 5);
                 return response.json();
             })
             .then((data) => {
@@ -85,25 +154,7 @@ const Game = () => {
                     });
                     return;
                 }
-                const compCards = computerCards;
-                compCards.shift();
-                setPlayerCards(playerCards.filter((card) => card.cardId !== selectedCard.cardId));
-                setComputerCards(compCards);
-
-                setGameData(data?.game);
-                setComputerScore(data?.game?.computerScore);
-                setPlayerScore(data?.game?.playerScore);
-                setComputerStat(data?.stat);
-                const compImageSrc = images(`./${data.computerCard.cardId.toString().padStart(3, '0')}.png`);
-                setComputerCardImage(compImageSrc);
-                SetRoundWinner(data?.roundWinner);
-                setRoundOver(true);
-                if (data?.game?.winner === 'Computer') {
-                    setPlayerLostCard(data?.playerLostCard);
-                }
-                setTimeout(() => {
-                    setWinner(data?.game?.winner);
-                }, 2000);
+                handleEnquiry();
             })
             .catch(() => {
                 toast.error("Something went wrong !!", {
@@ -115,25 +166,24 @@ const Game = () => {
             });
     };
 
+
     useEffect(() => {
-        const createGame = () => {
+        const createPvpGame = () => {
             setIsLoading(true);
 
-            const currentUser = getCurrentUser();
             const gameReq = {
-                'game_type': gameType.type,
-                'playerId': currentUser.user_id,
-                'playerCards': gameType.data
+                'pvpGameSize': pvp.create,
+                'playerOneId': getCurrentUser().user_id
             }
-            apiService.post('/card-game/api/games/createGame', gameReq)
+            apiService.post('/card-game/api/pvp/create', gameReq)
                 .then((response) => {
                     setTimeout(() => {
                         setIsLoading(false);
-
                     }, 7);
                     return response.json();
                 })
                 .then((data) => {
+                    console.log("pvp game data : ", data);
                     if (data?.success === false) {
                         toast.error(data.message, {
                             style: {
@@ -146,25 +196,21 @@ const Game = () => {
                         return;
                     }
                     const compCards = [];
-                    const size = data.playerCards.length;
+                    const size = data.playerOneCards.length;
                     for (let i = 0; i < size; i++) {
                         compCards.push(baseImage);
                     }
                     setComputerCards(compCards);
                     setGameData(data);
-                    setPlayerCards(data.playerCards);
-                    setComputerScore(data?.computerScore);
-                    setPlayerScore(data?.playerScore);
-                    if (data?.computerScore !== 0 || data?.playerScore !== 0) {
-                        toast.success("Existing game loaded !", {
-                            style: {
-                                backgroundColor: "black",
-                                color: "#ea9828",
-                            }
-                        })
-                    }
+                    setPlayerCards(data.playerOneCards);
+                    setComputerScore(data?.playerTwoScore);
+                    setPlayerScore(data?.playerOneScore);
+                    setOtherPlayerName(data.playerTwoName);
+                    setPlayerTurn('p1');
+                    console.log("Current Player turn : ", 'p1');
                 })
                 .catch(() => {
+                    console.log("error : ");
                     toast.error("Something went wrong !!", {
                         style: {
                             backgroundColor: "black",
@@ -174,15 +220,70 @@ const Game = () => {
                 });
         }
 
-        createGame();
-    }, [gameType, navigate]);
+        const joinPvpGame = () => {
+            setIsLoading(true);
+
+            const gameReq = {
+                'pvpGameId': pvp.join,
+                'playerTwoId': getCurrentUser().user_id
+            }
+            apiService.post('/card-game/api/pvp/join', gameReq)
+                .then((response) => {
+                    setTimeout(() => {
+                        setIsLoading(false);
+                    }, 7);
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log("pvp game data : ", data);
+                    if (data?.success === false) {
+                        toast.error(data.message, {
+                            style: {
+                                backgroundColor: "black",
+                                color: "#ea9828",
+                            }
+                        });
+                        setIsLoading(false);
+                        navigate("/player/dashboard");
+                        return;
+                    }
+                    const compCards = [];
+                    const size = data.playerTwoCards.length;
+                    for (let i = 0; i < size; i++) {
+                        compCards.push(baseImage);
+                    }
+                    setComputerCards(compCards);
+                    setGameData(data);
+                    setPlayerCards(data.playerTwoCards);
+                    setComputerScore(data?.playerOneScore);
+                    setPlayerScore(data?.playerTwoScore);
+                    setOtherPlayerName(data.playerOneName);
+                    setPlayerTurn('p1');
+                })
+                .catch(() => {
+                    console.log("error : ");
+                    toast.error("Something went wrong !!", {
+                        style: {
+                            backgroundColor: "black",
+                            color: "#ea9828",
+                        }
+                    });
+                });
+        }
+
+        if (getPvp() === 'p1') {
+            createPvpGame();
+        } else {
+            joinPvpGame();
+        }
+    }, [navigate, pvp]);
 
     const handleExit = () => {
         if(isMusicPlaying){
             playClickSound();
         }
         setIsLoading(true);
-        apiService.get(`/card-game/api/users/${gameData.playerId}`)
+        apiService.get(`/card-game/api/users/${currentUser.user_id}`)
             .then((response) => {
                 return response.json();
             })
@@ -218,45 +319,11 @@ const Game = () => {
         setSelectedCard(null);
         setRoundOver(false);
         setComputerCardImage(baseImage);
-        if (roundWinner === 'Player' && playerTurn) {
-            setPlayerTurn(false);
-        } else if (roundWinner === 'Computer' && !playerTurn) {
-            setPlayerTurn(true);
+        if (roundWinner === 'p1') {
+            setPlayerTurn('p2');
+        } else if (roundWinner === 'p2' && playerTurn === 'p2') {
+            setPlayerTurn('p1');
         }
-    }
-
-    const handleQuit = () => {
-        if(isMusicPlaying){
-            playClickSound();
-        }
-        setIsLoading(true);
-        apiService.get(`/card-game/api/games/quit/${gameData.game_id}`)
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                if (data?.success === false) {
-                    toast.error(data.message, {
-                        style: {
-                            backgroundColor: "black",
-                            color: "#ea9828",
-                        }
-                    });
-                    return;
-                }
-                setGameData(data?.game);
-                setWinner(data?.game?.winner);
-                setPlayerLostCard(data?.playerLostCard);
-            })
-            .catch(() => {
-                toast.error("Something went wrong !!", {
-                    style: {
-                        backgroundColor: "black",
-                        color: "#ea9828",
-                    }
-                });
-            });
-        setIsLoading(false);
     }
 
     const selectedCardImageSrc = selectedCard ? images(`./${selectedCard.cardId.toString().padStart(3, '0')}.png`) : null;
@@ -265,20 +332,15 @@ const Game = () => {
         <>
 
             <div className="game-card-container">
-                <div className="game-sound" onClick={toggleMusic} style={{ cursor: 'pointer' }}>
+            <div className='pvp-game-id'>(Game Id : {gameData?.pvpGameId})</div>
+            <div className="game-sound" onClick={toggleMusic} style={{ cursor: 'pointer' }}>
                     {isMusicPlaying ? (
                         <PiSpeakerHighFill />
                     ) : (
                         <PiSpeakerSlashFill />
                     )}
                 </div>
-
-                <div className="game-quit-button-container">
-                    <FaPowerOff className="game-quit-icon" onClick={handleQuit} />
-                    <div className="game-quit-info-div">Combine same type of cards to get upgraded card</div>
-                </div>
-                <ClipLoader size={50} color={"#3498db"} loading={isLoading} />
-                <div className="game-name-tag-computer">Computer</div>
+                <div className="game-name-tag-computer">{otherplayerName == null ? 'Opponent' : otherplayerName}</div>
                 <div className="game-card-sub-conainter">
                     <div className="game-computer-cards">
                         {computerCards.map((card, index) => (
@@ -287,12 +349,12 @@ const Game = () => {
                             </div>
                         ))}
                     </div>
-                    <div className='game-turn'>{playerTurn ? "Player's" : "Computer's"} turn</div>
+                    <div className='game-turn'>{((playerTurn === 'p1' && currentPlayer === 'p1') || (playerTurn === 'p2' && currentPlayer === 'p2')) ? "Player's" : "Opponent"} turn</div>
                     <div className="game-scores">
                         <div className="game-player-score">Player Score: {playerScore}</div>
-                        <div className="game-computer-score">Computer Score: {computerScore}</div>
+                        <div className="game-computer-score">Opponent Score: {computerScore}</div>
                     </div>
-                    <div className='game-turn-text'>{showStats ? (playerTurn ? "Select a stat !!" : "Select a card !!") : "Select a card !!"} </div>
+                    <div className='game-turn-text'>{showStats ? (((playerTurn === 'p1' && currentPlayer === 'p1') || (playerTurn === 'p2' && currentPlayer === 'p2')) ? "Select a stat !!" : "Select a card !!") : "Select a card !!"} </div>
 
                     <div className="game-player-cards">
 
@@ -308,7 +370,7 @@ const Game = () => {
                     </div>
                 </div>
                 <div className='game-stat-container'>
-                    {showStats && playerTurn && (
+                    {showStats && ((playerTurn === 'p1' && currentPlayer === 'p1') || (playerTurn === 'p2' && currentPlayer === 'p2')) && (
                         <div className="game-stats">
                             <button onClick={() => handleOptionSelect('speed')}>{`Speed - ${selectedCard.speed}`}</button>
                             <button onClick={() => handleOptionSelect('combat')}>{`Combat - ${selectedCard.combat}`}</button>
@@ -318,7 +380,7 @@ const Game = () => {
                             <button onClick={() => handleOptionSelect('regen')}>{`regen - ${selectedCard.regen}`}</button>
                         </div>
                     )}
-                    {showStats && !playerTurn && (
+                    {showStats && !((playerTurn === 'p1' && currentPlayer === 'p1') || (playerTurn === 'p2' && currentPlayer === 'p2')) && (
                         <div className="game-stats">
                             <button onClick={() => handleOptionSelect('select')}>Select</button>
                         </div>
@@ -330,35 +392,37 @@ const Game = () => {
                     <div className="game-modal-overlay">
                         <div className="game-modal-content" >
                             {roundOver && (<div className='game-winner-content'>
-                                {roundWinner === 'Draw' ? (
+                                {roundWinner === 'draw' ? (
                                     <p>Draw</p>
-                                ) : roundWinner === 'Player' ? (
-                                    <p>Player wins this round, next turn : computer</p>
-                                ) : (<p>Computer wins this round, next turn : player</p>)}
+                                ) : roundWinner === 'p1' ? currentPlayer === 'p1' ? (
+                                    <p>Player wins this round, next turn : opponent</p>
+                                ) : (
+                                    <p>Opponent wins this round, next turn : player</p>
+                                ) : currentPlayer === 'p1' ? (<p>Opponent wins this round, next turn : player</p>) : (<p>Player wins this round, next turn : opponent</p>)}
                             </div>)}
                             <div className="game-cards-display">
                                 <div className="game-card-wrapper">
                                     <div className='game-center-card-container'>
                                         <img src={selectedCardImageSrc} alt="Player's Card" className={`game-center-card ${roundOver && roundWinner !== 'Player' ? 'lost' : ''}`} />
                                     </div>
-                                    <div className='game-center-card-text'>Player's Card</div>
+                                    <div className='game-center-card-text'>{getCurrentUser().name}'s card</div>
                                 </div>
                                 <div className="game-card-wrapper">
                                     <div className='game-center-card-container'>
                                         <img src={computerCardImage} alt="Computer's Card" className="game-center-card" />
                                     </div>
-                                    <div className='game-center-card-text'>Computer's Card</div>
+                                    <div className='game-center-card-text'>{otherplayerName == null ? 'Player' : otherplayerName}'s card</div>
                                 </div>
                             </div>
                             {!roundOver && (<div>
-                                <button className="game-button" onClick={handleCompare}>Compare</button>
+                                <button className="game-button" onClick={handleSubmit}>Compare</button>
                             </div>)}
                             {roundOver && (
                                 <div className='game-stat-text'>
-                                    {playerTurn ? (
+                                    {((playerTurn === 'p1' && currentPlayer === 'p1') || (playerTurn === 'p2' && currentPlayer === 'p2')) ? (
                                         <p>Player picked : {statSelected}</p>
                                     ) : (
-                                        <p>Computer picked : {computerStat}</p>
+                                        <p>Opponent picked : {computerStat}</p>
                                     )}
                                 </div>
                             )}
@@ -373,17 +437,20 @@ const Game = () => {
                     <div className="game-modal-overlay">
                         <div className="game-modal-content">
                             <div className='game-winner-content'>
-                                {winner === 'Draw' ? (<p>DRAW</p>) : winner === 'Player' ? (<p>Game Winner : PLAYER</p>) : (<p>Game Winner : COMPUTER</p>)}
+                                {winner === 'draw' ? (
+                                    <p>Draw</p>
+                                ) : ((winner === 'p1' && currentPlayer === 'p1') || (winner === 'p2' && currentPlayer === 'p2')) ? 
+                                (<p>Game Winner : {currentUser.name}</p>) : (<p>Game Winner : {otherplayerName}</p>)}
                             </div>
                             <div className="game-winner-card-display">
                                 <div className="game-winner-card-wrapper">
-                                    {winner === 'Computer' && playerLostCard && (<div className='game-winner-card-computer'>
+                                    {winner !== 'draw' && playerLostCard && (<div className='game-winner-card-computer'>
                                         <img src={`${BASE_URL}/card-game/api/cards/image/card/${playerLostCard.cardImage}`} alt="Player's Card" className="game-winner-card" />
-                                        <div className='game-center-card-text'>You lost this card</div>
-                                    </div>)}
-                                    {winner === 'Player' && (<div className='game-winner-card-player'>
-                                        <GiChest className="game-chest-icon" />
-                                        <div className='game-center-card-text'>You got {gameData.game_type === '7v7' ? 1 : (gameData.game_type === '11v11' ? 2 : (gameData.game_type === '15v15' ? 3 : 1))} card draw !! Avail at Inventory</div>
+                                        <div className='game-center-card-text'>{winner === 'p1' ? currentPlayer === 'p1' ? (
+                                            <p>You win this card</p>
+                                        ) : (
+                                            <p>You lose this card</p>
+                                        ) : currentPlayer === 'p1' ? (<p>You lose this card</p>) : (<p>You win this card</p>)}</div>
                                     </div>)}
                                 </div>
                             </div>
@@ -405,4 +472,4 @@ const Game = () => {
     );
 };
 
-export default Game;
+export default PvP;

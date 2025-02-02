@@ -2,7 +2,7 @@
 
 .game-card-container {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   flex-direction: column;
   min-height: 100vh;
   background-color: #EA9828;
@@ -444,3 +444,15 @@
     padding: 10px;
   }
 } 
+
+.game-sound{
+  position: fixed;
+  z-index: 1001;
+  left: 2%;
+  top: 8%;
+  font-size: 30px;
+}
+
+.game-sound:hover{
+  transform: scale(1.1);
+}
