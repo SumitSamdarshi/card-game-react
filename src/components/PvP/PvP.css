@@ -85,7 +85,6 @@
     display: flex;
     justify-content: space-around;
     width: 100%;
-    padding: 0 20px;
     font-size: 18px;
     font-weight: bold;
     margin: 10px;
@@ -446,10 +445,6 @@
 
     .game-stat-text {
         font-size: 20px;
-    }
-
-    .game-scores {
-        padding: 30px;
     }
 
     .game-player-score {

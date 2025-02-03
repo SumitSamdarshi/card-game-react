@@ -37,6 +37,9 @@ const Game = () => {
     const [playerLostCard, setPlayerLostCard] = useState(null);
 
     const handleCardClick = (card) => {
+        if(isMusicPlaying){
+            playClickSound();
+        }
         if (selectedCard == null) {
             setSelectedCard(card);
         } else {
@@ -205,9 +208,6 @@ const Game = () => {
     }
 
     const handleCompareExit = () => {
-        if(isMusicPlaying){
-            playClickSound();
-        }
         setStatSelected(null);
         setSelectedCard(null);
         setRoundOver(false);
