@@ -20,7 +20,7 @@ const Collection = () => {
 
 
     const handleCardClick = (card) => {
-        if(isMusicPlaying){
+        if (isMusicPlaying) {
             playClickSound();
         }
         setActiveCard(card);
@@ -80,15 +80,15 @@ const Collection = () => {
 
     return (
         <div className="collection-container">
-            <div className="collection-sound" onClick={toggleMusic} style={{ cursor: 'pointer' }}>
+            <div className="sound-back" onClick={toggleMusic} style={{ cursor: 'pointer' }}>
+                <IoMdArrowRoundBack onClick={handleBackClick} />
                 {isMusicPlaying ? (
-                    <PiSpeakerHighFill />
+                    <PiSpeakerHighFill className="sound-icon" />
                 ) : (
-                    <PiSpeakerSlashFill />
+                    <PiSpeakerSlashFill className="sound-icon" />
                 )}
             </div>
             <div className="collection-heading-container">All Cards Available on this game</div>
-            <IoMdArrowRoundBack onClick={handleBackClick} className="collection-back-icon" />
             <div className="collection-bar-container" style={blurBg}>
                 {["All", "Common", "Rare", "Epic", "Mythic", "Legendary"].map((section) => (
                     <div

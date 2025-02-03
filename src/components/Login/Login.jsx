@@ -86,14 +86,15 @@ const Login = () => {
 
   return (
     <div className="login-container">
-      <div className="login-sound" onClick={toggleMusic} style={{ cursor: 'pointer' }}>
+      <div className="sound-back" onClick={toggleMusic} style={{ cursor: 'pointer' }}>
+      <IoMdArrowRoundBack onClick={handleBackClick} className="login-back-icon" />
         {isMusicPlaying ? (
-          <PiSpeakerHighFill />
+          <PiSpeakerHighFill className="sound-icon"/>
         ) : (
-          <PiSpeakerSlashFill />
+          <PiSpeakerSlashFill className="sound-icon"/>
         )}
       </div>
-      <IoMdArrowRoundBack onClick={handleBackClick} className="login-back-icon" />
+      
       <form className="login-form" onSubmit={handleSubmit}>
         <h2>Login</h2>
         <div className="login-form-group">

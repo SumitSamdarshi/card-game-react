@@ -37,14 +37,14 @@ const Dashboard = () => {
     };
 
     const handleInventoryClick = () => {
-        if(isMusicPlaying){
+        if (isMusicPlaying) {
             playClickSound();
         }
         navigate("/player/inventory")
     };
 
     const handleLogoutClick = () => {
-        if(isMusicPlaying){
+        if (isMusicPlaying) {
             playClickSound();
         }
         doLogOut(() => {
@@ -69,7 +69,7 @@ const Dashboard = () => {
     };
 
     const handleCustomSelect = () => {
-        if(isMusicPlaying){
+        if (isMusicPlaying) {
             playClickSound();
         }
         const user = getCurrentUser();
@@ -113,7 +113,7 @@ const Dashboard = () => {
     }
 
     const handleCustomPlay = () => {
-        if(isMusicPlaying){
+        if (isMusicPlaying) {
             playClickSound();
         }
         navigate("/player/game", {
@@ -125,16 +125,16 @@ const Dashboard = () => {
     }
 
     const handleCreate = () => {
-        if(createInput < 5){
+        if (createInput < 5) {
             toast.error("Min. 5v5 card game possible", {
                 style: {
                     backgroundColor: "black",
                     color: "#ea9828",
                 }
             });
-            return ;
+            return;
         }
-        if(isMusicPlaying){
+        if (isMusicPlaying) {
             playClickSound();
         }
         setPvpDropdownOpen(false);
@@ -148,7 +148,7 @@ const Dashboard = () => {
     }
 
     const handleJoin = () => {
-        if(isMusicPlaying){
+        if (isMusicPlaying) {
             playClickSound();
         }
         addPvp("p2");
@@ -199,7 +199,7 @@ const Dashboard = () => {
     }, []);
 
     const handleDropdown = () => {
-        if(isMusicPlaying){
+        if (isMusicPlaying) {
             playClickSound();
         }
         setDropdownOpen(!isDropdownOpen)
@@ -207,7 +207,7 @@ const Dashboard = () => {
     }
 
     const handlePvpDropdown = () => {
-        if(isMusicPlaying){
+        if (isMusicPlaying) {
             playClickSound();
         }
         setPvpDropdownOpen(!isPvpDropdownOpen);
@@ -216,18 +216,18 @@ const Dashboard = () => {
 
     return (
         <div className="dashboard-container">
-            <div className="dashboard-sound" onClick={toggleMusic} style={{ cursor: 'pointer' }}>
+            <div className="sound-back" onClick={toggleMusic} style={{ cursor: 'pointer' }}>
+                <IoMdArrowRoundBack onClick={handleBackClick}/>
                 {isMusicPlaying ? (
-                    <PiSpeakerHighFill />
+                    <PiSpeakerHighFill className="sound-icon" />
                 ) : (
-                    <PiSpeakerSlashFill />
+                    <PiSpeakerSlashFill className="sound-icon" />
                 )}
             </div>
-            <IoMdArrowRoundBack onClick={handleBackClick} className="dashboard-back-icon" />
             {isModalVisible && (
                 <div className="dashoard-modal-overlay">
                     <div className="dashoard-modal-content">
-                    <div className="dashboard-custom-text">You got these cards as starter: </div>
+                        <div className="dashboard-custom-text">You got these cards as starter: </div>
                         <div className="dashoard-cards-container">
                             {cardData.map((card) => {
                                 const imageSrc = images(`./${card.cardId.toString().padStart(3, '0')}.png`);

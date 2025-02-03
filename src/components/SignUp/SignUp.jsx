@@ -75,14 +75,14 @@ const SignUp = () => {
 
   return (
     <div className="signup-container">
-      <div className="signup-sound" onClick={toggleMusic} style={{ cursor: 'pointer' }}>
+      <div className="sound-back" onClick={toggleMusic} style={{ cursor: 'pointer' }}>
+      <IoMdArrowRoundBack onClick={handleBackClick} className="login-back-icon" />
         {isMusicPlaying ? (
-          <PiSpeakerHighFill />
+          <PiSpeakerHighFill className="sound-icon"/>
         ) : (
-          <PiSpeakerSlashFill />
+          <PiSpeakerSlashFill className="sound-icon"/>
         )}
       </div>
-      <IoMdArrowRoundBack onClick={handleBackClick} className="signup-back-icon" />
       <form className="signup-form" onSubmit={handleSubmit}>
         <h2>Sign Up</h2>
         <div className="signup-form-group">

@@ -90,28 +90,36 @@
   color: #0056b3;
 }
 
-.login-back-icon {
+/* .login-back-icon {
   position: fixed;
   cursor: pointer;
   font-size: 50px;
   top: 2%;
   left: 2%;
   z-index: 1000;
-}
+} */
 
 .login-back-icon:hover {
   transform: scale(1.2);
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.login-sound{
+.sound-back{
   position: fixed;
+  display: flex;
   z-index: 1001;
-  left: 10%;
+  left: 2%;
   top: 2%;
+  gap: 5%;
   font-size: 45px;
 }
 
-.login-sound:hover{
+.sound-icon:hover{
   transform: scale(1.1);
 }
+
+/* @media (max-width: 800px){
+  .login-sound{
+    left: 15%;
+  }
+} */

@@ -260,14 +260,14 @@ const Inventory = () => {
 
   return (
     <div className="inventory-container">
-      <div className="inventory-sound" onClick={toggleMusic} style={{ cursor: 'pointer' }}>
+      <div className="sound-back-inventory" onClick={toggleMusic} style={{ cursor: 'pointer' }}>
+      <IoMdArrowRoundBack onClick={handleBackClick}/>
         {isMusicPlaying ? (
-          <PiSpeakerHighFill />
+          <PiSpeakerHighFill className="inventory-sound-icon"/>
         ) : (
-          <PiSpeakerSlashFill />
+          <PiSpeakerSlashFill className="inventory-sound-icon"/>
         )}
       </div>
-      <IoMdArrowRoundBack onClick={handleBackClick} className="inventory-back-icon" />
       {!isSelecting && (
         <div className="inventory-profile-container" style={blurBg}>
           <div className="inventory-profile-card">

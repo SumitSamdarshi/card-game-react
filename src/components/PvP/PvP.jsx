@@ -41,9 +41,6 @@ const PvP = () => {
     console.log("Current Player : ", currentPlayer);
 
     const handleCardClick = (card) => {
-        if(isMusicPlaying){
-            playClickSound();
-        }
         if (selectedCard == null) {
             setSelectedCard(card);
         } else {
@@ -53,9 +50,6 @@ const PvP = () => {
     };
 
     const handleOptionSelect = (stat) => {
-        if(isMusicPlaying){
-            playClickSound();
-        }
         setShowStats(false);
         setStatSelected(stat);
     };
