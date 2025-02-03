@@ -10,6 +10,7 @@ import { TiEdit } from "react-icons/ti";
 import { ClipLoader } from "react-spinners";
 import { playClickSound, useMusic } from "../Music/MusicProvider";
 import { PiSpeakerHighFill, PiSpeakerSlashFill } from "react-icons/pi";
+import Confetti from 'react-confetti';
 
 const images = require.context('../../images', false, /\.(png|jpe?g|gif)$/);
 
@@ -391,7 +392,9 @@ const Inventory = () => {
       {activeCard && (
         <div className="inventory-modal-overlay" onClick={closeModal}>
           {newCard && (<div className="inventory-modal-overlay-text">You got this card !!</div>)}
+          
           <div className="inventory-modal-card" onClick={(e) => e.stopPropagation()}>
+          {activeCard.cardType==='legendary' && <Confetti width={window.innerWidth} height={window.innerHeight} />}
             <div className="inventory-modal-card-content">
               <img src={activeImageSrc} alt={activeCard.name} className="inventory-card-image" />
             </div>
