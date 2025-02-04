@@ -244,7 +244,7 @@
   object-fit: cover;
 }
 
-.dashoard-custom-cards-container{
+.dashoard-custom-cards-container {
   display: flex;
   justify-content: center;
   gap: 15px;
@@ -288,7 +288,7 @@
 }
 
 .dashboard-rounded-button {
-  background-color:#EA9828;
+  background-color: #EA9828;
   color: black;
   border: none;
   padding: 10px 20px;
@@ -310,7 +310,7 @@
   transform: none;
 }
 
-.dashboard-note-container{
+.dashboard-note-container {
   display: flex;
   justify-content: space-around;
   margin-bottom: 30px;
@@ -322,7 +322,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 10px 20px;
-  background-color: #EA9828;;
+  background-color: #EA9828;
+  ;
   border-radius: 25px;
   box-sizing: border-box;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -345,10 +346,10 @@
   cursor: pointer;
 }
 
-.dashboard-custom-text{
+.dashboard-custom-text {
   font-size: 20px;
   color: #EA6828;
-  margin-bottom : 20px;
+  margin-bottom: 20px;
 }
 
 .dashoard-modal-button:hover {
@@ -357,19 +358,21 @@
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-@media (max-width: 800px){
-  .dashoard-card-wrapper{
+@media (max-width: 800px) {
+  .dashoard-card-wrapper {
     width: 40%;
   }
-  .dashoard-custom-card-wrapper{
+
+  .dashoard-custom-card-wrapper {
     width: 20%;
   }
-  .dashoard-card{
+
+  .dashoard-card {
     width: 100%;
   }
-} 
+}
 
-.dashboard-sound{
+.dashboard-sound {
   position: fixed;
   z-index: 1001;
   left: 3%;
@@ -377,6 +380,6 @@
   font-size: 40px;
 }
 
-.dashboard-sound:hover{
+.dashboard-sound:hover {
   transform: scale(1.1);
 }

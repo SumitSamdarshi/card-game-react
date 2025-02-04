@@ -378,7 +378,7 @@ const Game = () => {
                                     </div>)}
                                     {winner === 'Player' && (<div className='game-winner-card-player'>
                                         <GiChest className="game-chest-icon" />
-                                        <div className='game-center-card-text'>You got {gameData.game_type === '7v7' ? 1 : (gameData.game_type === '11v11' ? 2 : (gameData.game_type === '15v15' ? 3 : 1))} card draw !! Avail at Inventory</div>
+                                        <div className='game-center-card-text'>You got {gameData?.winChestNumber} card draw chest !! Avail at Inventory</div>
                                     </div>)}
                                 </div>
                             </div>

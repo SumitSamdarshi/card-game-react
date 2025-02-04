@@ -18,7 +18,7 @@ const Dashboard = () => {
     const [cardData, setCardData] = useState([]);
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const gameTypes = ['7v7', '11v11', '15v15'];
+    const gameTypes = ['7v7', '11v11', '15v15', 'All'];
     const [customSelect, setCustomSelect] = useState(false);
     const [allDistinctCards, setAllDistinctCards] = useState([]);
     const [selectedCards, setSelectedCards] = useState([]);
