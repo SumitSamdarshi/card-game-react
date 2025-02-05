@@ -405,7 +405,7 @@ const Inventory = () => {
         <div className="inventory-note-card">
           <span className="inventory-note-text">{selectedCards.length}/{noOfCardsCombine} : Cards Selected</span>
         </div>
-        {!activeSection === 'Legendary' && (<button className="inventory-rounded-button" onClick={handleCombine} disabled={selectedCards.length < noOfCardsCombine}> Combine</button>)}
+        {!(activeSection ==='Legendary') && (<button className="inventory-rounded-button" onClick={handleCombine} disabled={selectedCards.length < noOfCardsCombine}> Combine</button>)}
         {activeSection === 'Legendary' && (<button className="inventory-rounded-button" onClick={handleScrap} disabled={selectedCards.length < noOfCardsCombine}> Scrap </button>)}
         <button className="inventory-rounded-button cancel" onClick={toggleSelectionMode}>Cancel</button>
       </div>

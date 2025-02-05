@@ -76,9 +76,9 @@ const Home = () => {
 
                             <h4 className="rule-subheading">Game</h4>
                             <ul className="rule-list">
-                                <li>Four game types are available, with options for 7, 11, 15 or custom no of cards.</li>
+                                <li>Five game types are available, with options for 7, 15, Random10, All andd Custom.</li>
                                 <li>The number of cards drawn will depend on the chosen game type.</li>
-                                <li>New PVP mode is added to play against real player</li>
+                                <li>PVP mode to make custom game and play against real player</li>
                                 <li>Player cards will be drawn based on the unique cards in the player’s deck.</li>
                                 <li>Computer cards will be drawn according to the rarity of the player’s cards.</li>
                                 <li>At the start of game, player will take the first turn.</li>
@@ -88,7 +88,7 @@ const Home = () => {
                                 <li>The winner of each round will be determined by comparing the values of the selected stats.</li>
                                 <li>The player with the higher overall score at the end of all rounds will be declared the winner of the game.</li>
                                 <li>If the player wins the game, a chest will be awarded.</li>
-                                <li>Rewards 7v7 : 1-chest, 11v11 : 2-chest, 15v15 : 3-chest and custom : 1-chest.</li>
+                                <li>Rewards will be no of cards used in games / 5 (ie if 15v15 then 15/5 =3 chest)</li>
                                 <li>If the player loses, one card from the player’s deck will be forfeited.</li>
                             </ul>
 
