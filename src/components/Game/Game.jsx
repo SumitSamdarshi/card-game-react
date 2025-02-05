@@ -228,11 +228,7 @@ const Game = () => {
         setSelectedCard(null);
         setRoundOver(false);
         setComputerCardImage(baseImage);
-        if (roundWinner === 'Player' && playerTurn) {
-            setPlayerTurn(false);
-        } else if (roundWinner === 'Computer' && !playerTurn) {
-            setPlayerTurn(true);
-        }
+        setPlayerTurn(gameData.turn==='player');
     }
 
     const handleQuit = () => {
@@ -344,8 +340,8 @@ const Game = () => {
                                 {roundWinner === 'Draw' ? (
                                     <p>Draw</p>
                                 ) : roundWinner === 'Player' ? (
-                                    <p>Player wins this round, next turn : computer</p>
-                                ) : (<p>Computer wins this round, next turn : player</p>)}
+                                    <p>Player wins this round, next turn : {gameData.game_type==='Random10' ? 'PLAYER' : 'COMPUTER' }</p>
+                                ) : (<p>Computer wins this round, next turn : {gameData.game_type==='Random10' ? 'COMPUTER' : 'PLAYER' }</p>)}
                             </div>)}
                             <div className="game-cards-display">
                                 <div className="game-card-wrapper">
