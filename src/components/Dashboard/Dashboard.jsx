@@ -8,6 +8,7 @@ import { apiService } from "../../service/user-service";
 import { ClipLoader } from "react-spinners";
 import { PiSpeakerHighFill, PiSpeakerSlashFill } from "react-icons/pi";
 import { playClickSound, useMusic } from "../Music/MusicProvider";
+import { RiInformation2Fill } from "react-icons/ri";
 
 const images = require.context('../../images', false, /\.(png|jpe?g|gif)$/);
 
@@ -18,13 +19,14 @@ const Dashboard = () => {
     const [cardData, setCardData] = useState([]);
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const gameTypes = ['7v7', '11v11', '15v15', 'All'];
+    const gameTypes = ['7v7', '15v15', 'All', 'Random10'];
     const [customSelect, setCustomSelect] = useState(false);
     const [allDistinctCards, setAllDistinctCards] = useState([]);
     const [selectedCards, setSelectedCards] = useState([]);
     const [isPvpDropdownOpen, setPvpDropdownOpen] = useState(false);
     const [createInput, setCreateInput] = useState('');
     const [joinInput, setJoinInput] = useState('');
+    const [infoToggle,setInfoToggle]=useState(false);
 
 
     const handleOptionSelect = (type) => {
@@ -124,6 +126,10 @@ const Dashboard = () => {
         })
     }
 
+    const handleInfoClick =() =>{
+        setInfoToggle(!infoToggle);
+    }
+
     const handleCreate = () => {
         if (createInput < 5) {
             toast.error("Min. 5v5 card game possible", {
@@ -217,13 +223,28 @@ const Dashboard = () => {
     return (
         <div className="dashboard-container">
             <div className="sound-back" onClick={toggleMusic} style={{ cursor: 'pointer' }}>
-                <IoMdArrowRoundBack onClick={handleBackClick}/>
+                <IoMdArrowRoundBack onClick={handleBackClick} />
                 {isMusicPlaying ? (
                     <PiSpeakerHighFill className="sound-icon" />
                 ) : (
                     <PiSpeakerSlashFill className="sound-icon" />
                 )}
             </div>
+            <div className="game-info">
+                <RiInformation2Fill className="game-info-icon" onClick={handleInfoClick}/>
+                <div className={`game-info-text ${infoToggle ? 'text-enable' : ''}`} on>
+                    <li>7v7 : Play with 7 cards</li>
+                    <ul></ul>
+                    <li>15v15 : Play with 15 cards</li>
+                    <ul></ul>
+                    <li>Custom : select cards you want to play with</li>
+                    <ul></ul>
+                    <li>All : Play with all of youre unique cards</li>
+                    <ul></ul>
+                    <li>Random10 : play with random 10 cards, winner will keep loser cards for next round</li>
+                </div>
+            </div>
+
             {isModalVisible && (
                 <div className="dashoard-modal-overlay">
                     <div className="dashoard-modal-content">

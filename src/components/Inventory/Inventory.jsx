@@ -112,7 +112,7 @@ const Inventory = () => {
           });
           return;
         }
-        setActiveCard(data.card)
+        setActiveCard(data.card);
         setNewCard(true);
         updateUser(data.user);
         setActiveSection('All');

@@ -372,6 +372,40 @@
   }
 }
 
+.game-info{
+  position: absolute;
+  z-index: 1001;
+  left: 3%;
+  top: 20%;
+  
+}
+.game-info-icon{
+  font-size: 40px;
+}
+
+.game-info-text{
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #EA9828;
+  color: black;
+  border-radius: 5px;
+  font-size: 14px;
+  text-align: start;
+  max-width: 200px;
+  transition: visibility 0s, opacity 0.3s ease;
+  box-sizing: border-box;
+  opacity: 0%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+.text-enable{
+  opacity: 85%;
+}
+.game-info-text,li{
+  text-indent: -2em;
+    padding-left: 1em;
+    margin-left: 1em;
+}
+
 .dashboard-sound {
   position: fixed;
   z-index: 1001;

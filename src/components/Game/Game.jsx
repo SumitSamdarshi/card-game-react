@@ -84,7 +84,17 @@ const Game = () => {
                 }
                 const compCards = computerCards;
                 compCards.shift();
-                setPlayerCards(playerCards.filter((card) => card.cardId !== selectedCard.cardId));
+                const plaCards=playerCards.filter((card) => card.cardId !== selectedCard.cardId);
+
+                if(data.game.game_type==='Random10'){
+                    if(data?.roundWinner==='Computer'){
+                        compCards.push(baseImage);
+                    }else if(data?.roundWinner==='Player'){
+                        plaCards.push(data.computerCard);
+                    }
+                }
+
+                setPlayerCards(plaCards);
                 setComputerCards(compCards);
 
                 setGameData(data?.game);
@@ -143,7 +153,12 @@ const Game = () => {
                         return;
                     }
                     const compCards = [];
-                    const size = data.playerCards.length;
+                    var size=0;
+                    if(data.game_type==='Random10'){
+                        size=data.playerCards.length +(data?.computerScore-data?.playerScore)
+                    }else{
+                        size = data.playerCards.length;
+                    }
                     for (let i = 0; i < size; i++) {
                         compCards.push(baseImage);
                     }
@@ -152,6 +167,7 @@ const Game = () => {
                     setPlayerCards(data.playerCards);
                     setComputerScore(data?.computerScore);
                     setPlayerScore(data?.playerScore);
+                    setPlayerTurn(data.turn==='player');
                     if (data?.computerScore !== 0 || data?.playerScore !== 0) {
                         toast.success("Existing game loaded !", {
                             style: {
@@ -373,7 +389,10 @@ const Game = () => {
                             <div className="game-winner-card-display">
                                 <div className="game-winner-card-wrapper">
                                     {winner === 'Computer' && playerLostCard && (<div className='game-winner-card-computer'>
-                                        <img src={playerLostCardImageSrc} alt="Player's Card" className="game-winner-card" />
+                                        <div className='computer-card-wrapper'>
+                                            <img src={playerLostCardImageSrc} alt="Player's Card" className="game-winner-card" />
+                                        </div>
+                                        
                                         <div className='game-center-card-text'>You lost this card</div>
                                     </div>)}
                                     {winner === 'Player' && (<div className='game-winner-card-player'>

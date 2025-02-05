@@ -380,6 +380,13 @@
   opacity: 1;
 }
 
+.game-winner-card-computer{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 @media (max-width: 800px){
   .game-player-cards{
     gap: 20px;
@@ -445,6 +452,18 @@
     left: 0;
     right: 0;
     bottom: 5%;
+  }
+
+  .computer-card-wrapper{
+    width: 60%;
+    padding: 20px;
+    background-color: black;
+    border-radius: 10px;
+  }
+
+  .game-winner-card{
+    padding: 0;
+    width: 100%;
   }
 } 
 
