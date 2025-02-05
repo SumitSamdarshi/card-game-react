@@ -18,7 +18,8 @@ const Inventory = () => {
   const navigate = useNavigate();
   const userData = getCurrentUser();
 
-  const [categories, setCategories] = useState(["All", "Common", "Rare", "Epic", "Mythic", "Legendary"]);
+  // const [categories, setCategories] = useState(["All", "Common", "Rare", "Epic", "Mythic", "Legendary"]);
+  const categories=["All", "Common", "Rare", "Epic", "Mythic", "Legendary"];
   const [isSelecting, setIsSelecting] = useState(false);
   const [activeCard, setActiveCard] = useState(null);
   const [selectedCards, setSelectedCards] = useState([]);
