@@ -480,3 +480,10 @@
 .inventory-sound-icon{
   font-size: 40px;
 }
+
+.scrap{
+  text-align: center;
+  font-size: 12px;
+  padding: 10px;
+  margin-bottom: 10px;
+}

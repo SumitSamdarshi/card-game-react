@@ -43,6 +43,8 @@ const Inventory = () => {
         setNoOfCardsCombine(5);
       } else if (section === 'Mythic') {
         setNoOfCardsCombine(6);
+      } else {
+        setNoOfCardsCombine(1);
       }
     }
   }
@@ -69,25 +71,69 @@ const Inventory = () => {
   };
 
   const toggleSelectionMode = () => {
-    if(isMusicPlaying){
+    if (isMusicPlaying) {
       playClickSound();
-  }
+    }
     if (!isSelecting) {
       setActiveSection('Common');
       setNoOfCardsCombine(3);
-      setCategories(categories.slice(0, -1));
+      // setCategories(categories.slice(0, -1));
     } else {
-      setCategories([...categories, 'Legendary']);
+      // setCategories([...categories, 'Legendary']);
     }
     setIsSelecting(!isSelecting);
 
     setSelectedCards([]);
   };
 
-  const handleCombine = () => {
-    if(isMusicPlaying){
-      playClickSound();
+  const handleScrap = () => {
+    const newCards = selectedCards.map(card => card.split('-')[0]);
+    console.log("newCards : ", newCards);
+    console.log(newCards[0]);
+    setIsLoading(true);
+    apiService.get(`/card-game/api/users/scrap/${getCurrentUser().user_id}/${newCards[0]}`)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log("data", data);
+        if (data?.success === false) {
+          toast.error(data.message, {
+            style: {
+              backgroundColor: "black",
+              color: "#ea9828",
+            }
+          });
+          return;
+        }
+        updateUser(data);
+        setActiveSection('All');
+        toast.success("15 Chest draws added", {
+          style: {
+            backgroundColor: "black",
+            color: "#ea9828",
+          }
+        });
+      })
+      .catch(() => {
+        setActiveSection('All');
+        toast.error("Something went wrong !!", {
+          style: {
+            backgroundColor: "black",
+            color: "#ea9828",
+          }
+        });
+      });
+
+    setIsSelecting(false);
+    setSelectedCards([]);
+    setIsLoading(false);
   }
+
+  const handleCombine = () => {
+    if (isMusicPlaying) {
+      playClickSound();
+    }
     setIsLoading(true);
 
     const newCards = selectedCards.map(card => card.split('-')[0]);
@@ -128,15 +174,15 @@ const Inventory = () => {
       });
 
     setIsSelecting(false);
-    setCategories([...categories, 'Legendary']);
+    // setCategories([...categories, 'Legendary']);
     setSelectedCards([]);
     setIsLoading(false);
   };
 
   const handleDraw = () => {
-    if(isMusicPlaying){
+    if (isMusicPlaying) {
       playClickSound();
-  }
+    }
     setIsLoading(true);
     apiService.post('/card-game/api/cards/draw', userData)
       .then((response) => {
@@ -261,11 +307,11 @@ const Inventory = () => {
   return (
     <div className="inventory-container">
       <div className="sound-back-inventory" onClick={toggleMusic} style={{ cursor: 'pointer' }}>
-      <IoMdArrowRoundBack onClick={handleBackClick}/>
+        <IoMdArrowRoundBack onClick={handleBackClick} />
         {isMusicPlaying ? (
-          <PiSpeakerHighFill className="inventory-sound-icon"/>
+          <PiSpeakerHighFill className="inventory-sound-icon" />
         ) : (
-          <PiSpeakerSlashFill className="inventory-sound-icon"/>
+          <PiSpeakerSlashFill className="inventory-sound-icon" />
         )}
       </div>
       {!isSelecting && (
@@ -358,12 +404,14 @@ const Inventory = () => {
         <div className="inventory-note-card">
           <span className="inventory-note-text">{selectedCards.length}/{noOfCardsCombine} : Cards Selected</span>
         </div>
-        <button className="inventory-rounded-button" onClick={handleCombine} disabled={selectedCards.length < noOfCardsCombine}>Combine</button>
+        {!activeSection === 'Legendary' && (<button className="inventory-rounded-button" onClick={handleCombine} disabled={selectedCards.length < noOfCardsCombine}> Combine</button>)}
+        {activeSection === 'Legendary' && (<button className="inventory-rounded-button" onClick={handleScrap} disabled={selectedCards.length < noOfCardsCombine}> Scrap </button>)}
         <button className="inventory-rounded-button cancel" onClick={toggleSelectionMode}>Cancel</button>
       </div>
       )}
 
       <div>
+        {isSelecting && activeSection === 'Legendary' && (<div className="scrap">Scrap a Legendary cards to get 15 chest draws !!</div>)}
         <div className="inventory-bar-container" style={blurBg}>
           {categories.map((section) => (
             <div
@@ -392,9 +440,9 @@ const Inventory = () => {
       {activeCard && (
         <div className="inventory-modal-overlay" onClick={closeModal}>
           {newCard && (<div className="inventory-modal-overlay-text">You got this card !!</div>)}
-          
+
           <div className="inventory-modal-card" onClick={(e) => e.stopPropagation()}>
-          {activeCard.cardType==='legendary' && <Confetti width={window.innerWidth} height={window.innerHeight} />}
+            {activeCard.cardType === 'legendary' && <Confetti width={window.innerWidth} height={window.innerHeight} />}
             <div className="inventory-modal-card-content">
               <img src={activeImageSrc} alt={activeCard.name} className="inventory-card-image" />
             </div>
